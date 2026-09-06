@@ -1,19 +1,43 @@
-# dau_24ct1_tran_hoang_giao
+# Mạng Xã Hội Sinh Viên - Flutter + Firebase
 
-A new Flutter project.
+## 1. Cài package
 
-## Getting Started
+Từ thư mục Flutter project:
 
-This project is a starting point for a Flutter application.
+```bash
+flutter pub add firebase_core firebase_auth cloud_firestore firebase_storage file_picker url_launcher
+```
 
-A few resources to get you started if this is your first Flutter project:
+Bạn đã có `lib/firebase_options.dart`, nên không cần tạo lại file đó. Code dùng riêng `DefaultFirebaseOptions.web` theo yêu cầu.
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## 2. Copy source
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# 24CT1-Tran_Hoang_Giao
-# 24CT1-Tran_Hoang_Giao
+Copy các thư mục `lib/models`, `lib/services`, `lib/views`, và `lib/main.dart` vào project.
+
+## 3. Firebase Console
+
+Bật:
+- Authentication > Sign-in method > Email/Password
+- Firestore Database
+- Storage
+
+Deploy rules:
+
+```bash
+firebase deploy --only firestore:rules,storage
+```
+
+Nếu chưa có Firebase CLI/config, có thể copy nội dung `firestore.rules` và `storage.rules` vào Firebase Console để test trước.
+
+## 4. Chạy
+
+```bash
+flutter pub get
+flutter run -d chrome
+```
+
+## 5. Lưu ý production
+
+App hiện đã dùng Firestore transaction cho tạo bài, review, upload document reward và mua item để tránh race condition đơn giản.
+
+Tuy nhiên, reward points vẫn được client gọi thông qua Firestore. Với production thật, không nên tin client ở các nghiệp vụ kinh tế như +10/+5/+15 hoặc trừ points. Hãy chuyển các mutation reward/purchase sang Cloud Functions hoặc backend tin cậy và viết Rules chặt hơn.
