@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/user_model.dart';
 import '../services/auth_service.dart';
 import '../services/database_service.dart';
+import '../widgets/user_avatar_badge.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -19,27 +20,26 @@ class ProfileView extends StatelessWidget {
         return ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            // Avatar & Tên
-            Center(
-              child: Column(
-                children: [
-                  CircleAvatar(
-                    radius: 40,
-                    backgroundColor: Colors.amber,
-                    child: Text(
-                      user.name.isNotEmpty ? user.name[0].toUpperCase() : 'U',
-                      style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.black),
+            // 1. Khung Preview Trang phục (Live Discord Style Preview)
+            Card(
+              color: Colors.grey.shade900,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    const Text('Xem trước Trang phục', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                    const SizedBox(height: 12),
+                    UserHeaderBadge(
+                      name: user.name,
+                      inventory: user.equipped.values.toList(), // Hiển thị theo item đang đeo
                     ),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(user.name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  Text('${user.msv} • ${user.university}', style: const TextStyle(color: Colors.grey)),
-                ],
+                  ],
+                ),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
 
-            // Thẻ Điểm tích lũy
+            // 2. Thẻ Điểm tích lũy
             Card(
               child: ListTile(
                 leading: const Icon(Icons.stars, color: Colors.amber, size: 32),
@@ -47,11 +47,12 @@ class ProfileView extends StatelessWidget {
                 trailing: Text('${user.points} pts', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.amber)),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
 
-            // Kho vật phẩm trang trí đã sở hữu
-            const Text('Kho trang trí của tôi', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            // 3. Kho vật phẩm & Quản lý Trang bị
+            const Text('Kho trang trí của tôi (Bấm để đeo/tháo)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
             const SizedBox(height: 8),
+
             user.inventory.isEmpty
                 ? const Card(
                     child: Padding(
@@ -61,12 +62,33 @@ class ProfileView extends StatelessWidget {
                   )
                 : Wrap(
                     spacing: 8,
-                    children: user.inventory
-                        .map((item) => Chip(
-                              avatar: const Icon(Icons.military_tech, color: Colors.amber),
-                              label: Text(item),
-                            ))
-                        .toList(),
+                    runSpacing: 8,
+                    children: user.inventory.map((item) {
+                      final isEquipped = user.equipped.containsValue(item);
+
+                      return FilterChip(
+                        selected: isEquipped,
+                        avatar: Icon(
+                          isEquipped ? Icons.check_circle : Icons.military_tech,
+                          color: isEquipped ? Colors.green : Colors.amber,
+                        ),
+                        label: Text(item),
+                        selectedColor: Colors.amber.withOpacity(0.3),
+                        onSelected: (bool selected) async {
+                          final currentEquipped = Map<String, String>.from(user.equipped);
+                          
+                          if (selected) {
+                            // Đeo trang bị vào slot tương ứng
+                            currentEquipped[item] = item;
+                          } else {
+                            // Tháo trang bị
+                            currentEquipped.removeWhere((key, value) => value == item);
+                          }
+
+                          await db.updateEquippedItems(currentEquipped);
+                        },
+                      );
+                    }).toList(),
                   ),
             const SizedBox(height: 32),
 

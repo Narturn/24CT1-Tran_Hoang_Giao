@@ -16,13 +16,14 @@ class DatabaseService {
     return _db.collection('users').doc(uid).snapshots().map((doc) {
       if (!doc.exists || doc.data() == null) {
         return UserModel(
-          id: uid,
+          uid: uid,
           msv: '',
           name: 'Sinh viên',
           university: '',
           email: _auth.currentUser?.email ?? '',
           points: 0,
           inventory: [],
+          equipped: {},
         );
       }
       return UserModel.fromMap(doc.data()!, doc.id);
@@ -35,14 +36,22 @@ class DatabaseService {
       return UserModel.fromMap(doc.data()!, doc.id);
     }
     return UserModel(
-      id: userId,
+      uid: userId,
       msv: '',
       name: 'Sinh viên',
       university: '',
       email: '',
       points: 0,
       inventory: [],
+      equipped: {},
     );
+  }
+
+  // Hàm cập nhật vật phẩm đang trang bị
+  Future<void> updateEquippedItems(Map<String, String> newEquipped) async {
+    await _db.collection('users').doc(uid).update({
+      'equipped': newEquipped,
+    });
   }
 
   Future<void> addPoints(String userId, int amount) async {
@@ -126,14 +135,22 @@ class DatabaseService {
     final user = await getUser(uid);
     final reviewRef = _db.collection('reviews').doc();
 
-    await reviewRef.set({
+    final RegExp regExp = RegExp(r'#\w+');
+    final List<String> tags = regExp
+      .allMatches(comment)
+      .map((match) => match.group(0)!.toLowerCase())
+      .toList();
+
+      await reviewRef.set({
       'id': reviewRef.id,
       'authorId': uid,
       'authorName': user.name,
+      'authorEquipped': user.equipped.values.toList(),
       'targetName': targetName,
       'category': category,
       'rating': rating,
       'comment': comment,
+      'tags': tags,
       'createdAt': FieldValue.serverTimestamp(),
     });
 

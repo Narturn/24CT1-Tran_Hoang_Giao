@@ -28,7 +28,7 @@ class _DocumentsViewState extends State<DocumentsView> {
               controller: titleController,
               decoration: const InputDecoration(
                 labelText: 'Tên / Tiêu đề tài liệu',
-                hintText: 'VD: Slide Toán Rời Rạc K24',
+                hintText: 'VD: Slide Công nghệ phần mềm',
               ),
             ),
             const SizedBox(height: 12),
