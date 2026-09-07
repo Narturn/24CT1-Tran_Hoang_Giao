@@ -27,16 +27,16 @@ class _ReviewsViewState extends State<ReviewsView> {
           children: [
             TextField(
               controller: targetController,
-              decoration: const InputDecoration(labelText: 'Tên Tên Môn / Giảng viên'),
+              decoration: const InputDecoration(labelText: 'Tên bài review'),
             ),
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               value: category,
               items: const [
-                DropdownMenuItem(value: 'Môn học', child: Text('Môn học')),
-                DropdownMenuItem(value: 'Giảng viên', child: Text('Giảng viên')),
+                DropdownMenuItem(value: 'Trong trường', child: Text('Trong trường')),
+                DropdownMenuItem(value: 'Ngoài trường', child: Text('Ngoài trường')),
               ],
-              onChanged: (val) => category = val ?? 'Môn học',
+              onChanged: (val) => category = val ?? 'Trong trường',
             ),
             const SizedBox(height: 8),
             TextField(
@@ -83,20 +83,43 @@ class _ReviewsViewState extends State<ReviewsView> {
           if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
           final reviews = snapshot.data!;
 
-          return ListView.builder(
-            itemCount: reviews.length,
-            padding: const EdgeInsets.all(12),
-            itemBuilder: (context, index) {
-              final item = reviews[index];
-              return Card(
-                child: ListTile(
-                  title: Text('${item.targetName} [${item.category}]'),
-                  subtitle: Text('${item.comment}\nViết bởi: ${item.authorName}'),
-                  trailing: Text('⭐ ${item.rating}'),
-                  isThreeLine: true,
+          return Column(
+            children: [
+              // Thanh lọc Hashtag
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                child: Row(
+                  children: [
+                    FilterChip(label: const Text('Tất cả'), selected: true, onSelected: (_) {}),
+                    const SizedBox(width: 8),
+                    FilterChip(label: const Text('#MonHoc'), selected: false, onSelected: (_) {}),
+                    const SizedBox(width: 8),
+                    FilterChip(label: const Text('#GiangVien'), selected: false, onSelected: (_) {}),
+                    const SizedBox(width: 8),
+                    FilterChip(label: const Text('#QuanAnNearCampus'), selected: false, onSelected: (_) {}),
+                  ],
                 ),
-              );
-            },
+              ),
+              // Danh sách review nằm trong Expanded
+              Expanded(
+                child: ListView.builder(
+                  itemCount: reviews.length,
+                  padding: const EdgeInsets.all(12),
+                  itemBuilder: (context, index) {
+                    final item = reviews[index];
+                    return Card(
+                      child: ListTile(
+                        title: Text('${item.targetName} [${item.category}]'),
+                        subtitle: Text('${item.comment}\nViết bởi: ${item.authorName}'),
+                        trailing: Text('⭐ ${item.rating}'),
+                        isThreeLine: true,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           );
         },
       ),

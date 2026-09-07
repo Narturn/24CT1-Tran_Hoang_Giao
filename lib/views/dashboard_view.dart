@@ -6,6 +6,7 @@ import 'documents_view.dart';
 import 'forum_view.dart';
 import 'reviews_view.dart';
 import 'store_view.dart';
+import 'profile_view.dart';
 
 class DashboardView extends StatefulWidget {
   const DashboardView({super.key});
@@ -25,6 +26,7 @@ class _DashboardViewState extends State<DashboardView> {
       ForumView(),
       ReviewsView(),
       StoreView(),
+      ProfileView(),
     ];
 
     return StreamBuilder<UserModel?>(
@@ -71,10 +73,11 @@ class _DashboardViewState extends State<DashboardView> {
             selectedIndex: _index,
             onDestinationSelected: (value) => setState(() => _index = value),
             destinations: const [
-              NavigationDestination(icon: Icon(Icons.folder), label: 'Tài liệu'),
-              NavigationDestination(icon: Icon(Icons.forum), label: 'Chém gió'),
-              NavigationDestination(icon: Icon(Icons.rate_review), label: 'Review'),
+              NavigationDestination(icon: Icon(Icons.folder), label: 'Kho tài liệu'),
+              NavigationDestination(icon: Icon(Icons.forum), label: 'Sảnh chém gió'),
+              NavigationDestination(icon: Icon(Icons.rate_review), label: 'Trạm review'),
               NavigationDestination(icon: Icon(Icons.store), label: 'Cửa hàng'),
+              NavigationDestination(icon: Icon(Icons.person), label: 'Cá nhân'),
             ],
           ),
         );
