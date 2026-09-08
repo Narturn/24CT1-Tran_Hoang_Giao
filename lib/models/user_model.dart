@@ -7,6 +7,8 @@ class UserModel {
   final int points;
   final List<String> inventory; // Danh sách vật phẩm/danh hiệu đã mua
   final Map<String, String> equipped;
+  final String role; // 'admin' hoặc 'user'
+  final List<String> friends; // Danh sách UID bạn bè
 
   UserModel({
     required this.uid,
@@ -17,7 +19,11 @@ class UserModel {
     required this.points,
     required this.inventory,
     required this.equipped,
+    this.role = 'user',
+    this.friends = const [],
   });
+
+  bool get isAdmin => role == 'admin';
 
   factory UserModel.fromMap(Map<String, dynamic> map, String uid) {
     return UserModel(
@@ -29,6 +35,8 @@ class UserModel {
       points: map['points'] ?? 0,
       inventory: List<String>.from(map['inventory'] ?? []),
       equipped: Map<String, String>.from(map['equipped'] ?? {}),
+      role: map['role'] ?? 'user',
+      friends: List<String>.from(map['friends'] ?? []),
     );
   }
 
@@ -41,6 +49,9 @@ class UserModel {
       'university': university,
       'points': points,
       'inventory': inventory,
+      'equipped': equipped,
+      'role': role,
+      'friends': friends,
     };
   }
 }

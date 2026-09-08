@@ -38,6 +38,9 @@ class AuthService {
         'email': email,
         'points': 0,
         'inventory': [],
+        'equipped': {},
+        'friends': [],
+        'role': 'user',
         'createdAt': FieldValue.serverTimestamp(),
       });
     }

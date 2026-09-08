@@ -24,6 +24,7 @@ class DatabaseService {
           points: 0,
           inventory: [],
           equipped: {},
+          role: 'user',
         );
       }
       return UserModel.fromMap(doc.data()!, doc.id);
@@ -44,6 +45,7 @@ class DatabaseService {
       points: 0,
       inventory: [],
       equipped: {},
+      role: 'user',
     );
   }
 
@@ -72,7 +74,7 @@ class DatabaseService {
   Future<void> createPost(String content) async {
     final user = await getUser(uid);
     final postRef = _db.collection('posts').doc();
-    
+
     await postRef.set({
       'id': postRef.id,
       'authorId': uid,
@@ -80,6 +82,7 @@ class DatabaseService {
       'content': content,
       'likes': [],
       'commentsCount': 0,
+      'authorEquipped': user.equipped.values.toList(),
       'createdAt': FieldValue.serverTimestamp(),
     });
 
@@ -97,6 +100,10 @@ class DatabaseService {
 
   Future<void> toggleLike(String postId, List<String> currentLikes) => toggleLikePost(postId, currentLikes);
 
+  Future<void> deletePost(String postId) async {
+    await _db.collection('posts').doc(postId).delete();
+  }
+
   // DOCUMENTS
   Stream<List<DocumentModel>> documentsStream() {
     return _db
@@ -109,6 +116,10 @@ class DatabaseService {
   Future<void> createDocument({required DocumentModel document}) async {
     await _db.collection('documents').doc(document.id).set(document.toMap());
     await addPoints(uid, 10);
+  }
+
+  Future<void> deleteDocument(String docId) async {
+    await _db.collection('documents').doc(docId).delete();
   }
 
   Future<void> incrementDownloadCount(String docId) async {
@@ -157,6 +168,10 @@ class DatabaseService {
     await addPoints(uid, 15);
   }
 
+  Future<void> deleteReview(String reviewId) async {
+    await _db.collection('reviews').doc(reviewId).delete();
+  }
+
   // STORE (TRANSACTION)
   Future<void> buyItem(String itemId, int price) async {
     final userRef = _db.collection('users').doc(uid);
@@ -184,4 +199,200 @@ class DatabaseService {
   }
 
   Future<void> purchaseItem(String itemId, int price) => buyItem(itemId, price);
+
+  // DYNAMIC STORE ITEMS (FIRESTORE)
+  Stream<List<Map<String, dynamic>>> storeItemsStream() {
+    return _db.collection('store_items').orderBy('price').snapshots().map((snap) {
+      if (snap.docs.isEmpty) {
+        _seedDefaultStoreItems();
+      }
+      return snap.docs.map((doc) {
+        final data = doc.data();
+        data['id'] = doc.id;
+        return data;
+      }).toList();
+    });
+  }
+
+  Future<void> _seedDefaultStoreItems() async {
+    final defaults = [
+      {
+        'id': 'title_pro',
+        'name': 'Danh hiệu "Học Thần"',
+        'desc': 'Hiển thị huy hiệu VIP bên cạnh tên bài viết',
+        'price': 30,
+        'icon': 'military_tech',
+        'color': 0xFFFFC107, // Amber
+      },
+      {
+        'id': 'frame_gold',
+        'name': 'Khung Avatar Hoàng Kim',
+        'desc': 'Trang trí viền avatar vàng lấp lánh',
+        'price': 60,
+        'icon': 'stars',
+        'color': 0xFFFFAB40, // OrangeAccent
+      },
+      {
+        'id': 'badge_active',
+        'name': 'Huy hiệu "Chiến Thần Chém Gió"',
+        'desc': 'Mở khóa icon lửa nhiệt huyết ở Forum',
+        'price': 100,
+        'icon': 'whatshot',
+        'color': 0xFFFF5722, // DeepOrange
+      },
+      {
+        'id': 'theme_cyber',
+        'name': 'Thẻ Đổi Màu Tên (Cyberpunk)',
+        'desc': 'Tên sinh viên đổi sang màu Neon nổi bật',
+        'price': 150,
+        'icon': 'palette',
+        'color': 0xFFE040FB, // PurpleAccent
+      },
+    ];
+
+    for (final item in defaults) {
+      await _db.collection('store_items').doc(item['id'] as String).set({
+        ...item,
+        'createdAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+    }
+  }
+
+  Future<void> createStoreItem({
+    required String id,
+    required String name,
+    required String desc,
+    required int price,
+    required String icon,
+    required int color,
+  }) async {
+    final docId = id.trim().isNotEmpty ? id.trim() : 'item_${DateTime.now().millisecondsSinceEpoch}';
+    await _db.collection('store_items').doc(docId).set({
+      'id': docId,
+      'name': name.trim(),
+      'desc': desc.trim(),
+      'price': price,
+      'icon': icon,
+      'color': color,
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+  }
+
+  Future<void> deleteStoreItem(String itemId) async {
+    await _db.collection('store_items').doc(itemId).delete();
+  }
+
+  // USER MANAGEMENT & ADMIN
+  Stream<List<UserModel>> usersStream() {
+    return _db.collection('users').snapshots().map((snap) {
+      return snap.docs.map((doc) => UserModel.fromMap(doc.data(), doc.id)).toList();
+    });
+  }
+
+  Future<void> updateUserRole(String targetUid, String newRole) async {
+    await _db.collection('users').doc(targetUid).update({'role': newRole});
+  }
+
+  // FACEBOOK FRIENDSHIP & CONTACTS
+  Future<void> toggleFriend(String targetUid) async {
+    if (uid.isEmpty || targetUid == uid) return;
+    final user = await getUser(uid);
+    final isFriend = user.friends.contains(targetUid);
+    final userRef = _db.collection('users').doc(uid);
+    final targetRef = _db.collection('users').doc(targetUid);
+
+    if (isFriend) {
+      await userRef.update({'friends': FieldValue.arrayRemove([targetUid])});
+      await targetRef.update({'friends': FieldValue.arrayRemove([uid])});
+    } else {
+      await userRef.update({'friends': FieldValue.arrayUnion([targetUid])});
+      await targetRef.update({'friends': FieldValue.arrayUnion([uid])});
+    }
+  }
+
+  // Lấy danh bạ gồm: Bạn bè + những người có hội thoại chat với mình
+  Stream<List<UserModel>> contactsStream() {
+    if (uid.isEmpty) return Stream.value([]);
+
+    return _db.collection('users').doc(uid).snapshots().asyncMap((doc) async {
+      final Set<String> contactUids = {};
+      if (doc.exists && doc.data() != null) {
+        final friends = List<String>.from(doc.data()!['friends'] ?? []);
+        contactUids.addAll(friends);
+      }
+
+      // Lấy các phòng chat có mình
+      try {
+        final chatSnaps = await _db
+            .collection('chats')
+            .where('users', arrayContains: uid)
+            .get();
+
+        for (final c in chatSnaps.docs) {
+          final users = List<String>.from(c.data()['users'] ?? []);
+          for (final u in users) {
+            if (u != uid) contactUids.add(u);
+          }
+        }
+      } catch (_) {}
+
+      if (contactUids.isEmpty) return <UserModel>[];
+
+      final List<UserModel> list = [];
+      for (final cUid in contactUids) {
+        final u = await getUser(cUid);
+        list.add(u);
+      }
+      return list;
+    });
+  }
+
+  // REALTIME FACEBOOK CHAT
+  String getChatId(String u1, String u2) {
+    return u1.compareTo(u2) < 0 ? '${u1}_$u2' : '${u2}_$u1';
+  }
+
+  Stream<List<Map<String, dynamic>>> messagesStream(String friendId) {
+    final chatId = getChatId(uid, friendId);
+    return _db
+        .collection('chats')
+        .doc(chatId)
+        .collection('messages')
+        .orderBy('createdAt', descending: false)
+        .snapshots()
+        .map((snap) => snap.docs.map((doc) {
+              final data = doc.data();
+              data['id'] = doc.id;
+              return data;
+            }).toList());
+  }
+
+  Future<void> sendMessage({
+    required String recipientId,
+    required String text,
+  }) async {
+    final trimmed = text.trim();
+    if (trimmed.isEmpty || uid.isEmpty) return;
+
+    final user = await getUser(uid);
+    final chatId = getChatId(uid, recipientId);
+    final chatDocRef = _db.collection('chats').doc(chatId);
+    final messageRef = chatDocRef.collection('messages').doc();
+
+    await messageRef.set({
+      'id': messageRef.id,
+      'senderId': uid,
+      'senderName': user.name,
+      'recipientId': recipientId,
+      'text': trimmed,
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+
+    await chatDocRef.set({
+      'users': [uid, recipientId],
+      'lastMessage': trimmed,
+      'lastSenderId': uid,
+      'updatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
+  }
 }

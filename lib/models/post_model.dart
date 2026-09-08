@@ -8,6 +8,8 @@ class PostModel {
   final List<String> likes;
   final int commentsCount;
   final DateTime? createdAt;
+  /// Danh sách ID vật phẩm đang trang bị của tác giả lúc đăng bài
+  final List<String> authorEquipped;
 
   PostModel({
     required this.id,
@@ -17,6 +19,7 @@ class PostModel {
     required this.likes,
     required this.commentsCount,
     this.createdAt,
+    this.authorEquipped = const [],
   });
 
   factory PostModel.fromMap(Map<String, dynamic> map, String docId) {
@@ -28,6 +31,7 @@ class PostModel {
       likes: List<String>.from(map['likes'] ?? []),
       commentsCount: map['commentsCount'] ?? 0,
       createdAt: (map['createdAt'] as Timestamp?)?.toDate(),
+      authorEquipped: List<String>.from(map['authorEquipped'] ?? []),
     );
   }
 
@@ -39,6 +43,7 @@ class PostModel {
       'likes': likes,
       'commentsCount': commentsCount,
       'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : FieldValue.serverTimestamp(),
+      'authorEquipped': authorEquipped,
     };
   }
 }

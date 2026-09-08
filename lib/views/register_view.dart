@@ -101,7 +101,7 @@ class _RegisterViewState extends State<RegisterView> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: _selectedUniversity,
+                initialValue: _selectedUniversity,
                 decoration: const InputDecoration(
                   labelText: 'Trường Đại học',
                   prefixIcon: Icon(Icons.school),
