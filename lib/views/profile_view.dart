@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/user_model.dart';
+import '../models/cosmetic_registry.dart'; // Đảm bảo import file CosmeticRegistry
 import '../services/auth_service.dart';
 import '../services/database_service.dart';
 import '../widgets/user_avatar_badge.dart';
@@ -92,9 +93,13 @@ class ProfileView extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
 
-                // 4. Kho vật phẩm & Quản lý Trang bị
+                // 4. Kho vật phẩm & Quản lý Trang bị (Phân loại theo Slot)
                 const Text('Kho trang trí của tôi (Bấm để đeo/tháo)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                const SizedBox(height: 8),
+                const Text(
+                  'Quy định: Tối đa 1 Khung, 1 Màu tên, và 3 Huy hiệu cùng lúc',
+                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                ),
+                const SizedBox(height: 12),
 
                 user.inventory.isEmpty
                     ? const Card(
@@ -106,24 +111,72 @@ class ProfileView extends StatelessWidget {
                     : Wrap(
                         spacing: 8,
                         runSpacing: 8,
-                        children: user.inventory.map((item) {
-                          final isEquipped = user.equipped.containsValue(item);
+                        children: user.inventory.map((itemId) {
+                          final itemInfo = CosmeticRegistry.getById(itemId);
+                          final isEquipped = user.equipped.containsValue(itemId);
 
                           return FilterChip(
                             selected: isEquipped,
                             avatar: Icon(
-                              isEquipped ? Icons.check_circle : Icons.military_tech,
-                              color: isEquipped ? Colors.green : Colors.amber,
+                              isEquipped ? Icons.check_circle : (itemInfo?.icon ?? Icons.military_tech),
+                              color: isEquipped ? Colors.green : (itemInfo?.color ?? Colors.amber),
                             ),
-                            label: Text(item),
+                            label: Text(itemInfo?.name ?? itemId),
                             selectedColor: Colors.amber.withValues(alpha: 0.3),
                             onSelected: (bool selected) async {
                               final currentEquipped = Map<String, String>.from(user.equipped);
-                              
+
                               if (selected) {
-                                currentEquipped[item] = item;
+                                // Nếu chưa có trong registry thì lưu theo chuỗi id
+                                if (itemInfo == null) {
+                                  currentEquipped[itemId] = itemId;
+                                } else {
+                                  // --- QUY TẮC ĐEO TRANG BỊ ---
+                                  switch (itemInfo.effect) {
+                                    case CosmeticEffect.avatarFrame:
+                                      // Tháo các khung avatar cũ đang đeo
+                                      currentEquipped.removeWhere((key, val) {
+                                        final oldItem = CosmeticRegistry.getById(val);
+                                        return oldItem?.effect == CosmeticEffect.avatarFrame;
+                                      });
+                                      currentEquipped[itemId] = itemId;
+                                      break;
+
+                                    case CosmeticEffect.nameColor:
+                                      // Tháo các màu tên cũ đang đeo
+                                      currentEquipped.removeWhere((key, val) {
+                                        final oldItem = CosmeticRegistry.getById(val);
+                                        return oldItem?.effect == CosmeticEffect.nameColor;
+                                      });
+                                      currentEquipped[itemId] = itemId;
+                                      break;
+
+                                    case CosmeticEffect.badge:
+                                      // Đếm số lượng huy hiệu (badge) đang đeo
+                                      final currentBadges = currentEquipped.values.where((val) {
+                                        final oldItem = CosmeticRegistry.getById(val);
+                                        return oldItem?.effect == CosmeticEffect.badge;
+                                      }).toList();
+
+                                      // Giới hạn tối đa 3 huy hiệu
+                                      if (currentBadges.length >= 3) {
+                                        if (context.mounted) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(
+                                              content: Text('⚠️ Bạn chỉ có thể đeo tối đa 3 Huy hiệu cùng lúc! Vui lòng tháo bớt 1 huy hiệu.'),
+                                              backgroundColor: Colors.orangeAccent,
+                                            ),
+                                          );
+                                        }
+                                        return; // Dừng lại không cho đeo thêm
+                                      }
+                                      currentEquipped[itemId] = itemId;
+                                      break;
+                                  }
+                                }
                               } else {
-                                currentEquipped.removeWhere((key, value) => value == item);
+                                // Tháo vật phẩm
+                                currentEquipped.removeWhere((key, value) => value == itemId);
                               }
 
                               await db.updateEquippedItems(currentEquipped);
@@ -189,7 +242,6 @@ class ProfileView extends StatelessWidget {
           FilledButton(
             style: FilledButton.styleFrom(backgroundColor: Colors.redAccent),
             onPressed: () {
-              // Mã bí mật quản trị viên (Chỉ bạn và người có thẩm quyền mới biết mã này)
               const secretKey = 'DAU28NrTrn@1f&M';
               if (keyController.text.trim() == secretKey) {
                 Navigator.pop(ctx, true);

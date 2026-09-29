@@ -15,7 +15,7 @@ class _RegisterViewState extends State<RegisterView> {
   final _studentIdController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  
+  final _confirmPasswordController = TextEditingController();
   final _authService = AuthService();
   bool _isLoading = false;
   
@@ -66,6 +66,7 @@ class _RegisterViewState extends State<RegisterView> {
     _studentIdController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -144,6 +145,23 @@ class _RegisterViewState extends State<RegisterView> {
                   return null;
                 },
               ),
+              const SizedBox(height: 16),
+              
+              TextFormField(
+                controller: _confirmPasswordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Nhập lại mật khẩu',
+                  prefixIcon: Icon(Icons.lock_outline),
+                  border: OutlineInputBorder(),
+                ),
+                validator: (val) {
+                  if (val == null || val.isEmpty) return 'Vui lòng xác nhận mật khẩu';
+                  if (val != _passwordController.text) return 'Mật khẩu nhập lại không khớp';
+                  return null;
+                },
+              ),
+              
               const SizedBox(height: 24),
               SizedBox(
                 height: 50,
