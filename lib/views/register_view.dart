@@ -11,34 +11,96 @@ class RegisterView extends StatefulWidget {
 
 class _RegisterViewState extends State<RegisterView> {
   final _formKey = GlobalKey<FormState>();
+  
   final _nameController = TextEditingController();
-  final _studentIdController = TextEditingController();
-  final _emailController = TextEditingController();
+  final _studentEmailController = TextEditingController(); // Email trường để nhận OTP
+  final _otpController = TextEditingController();           // Mã OTP
+  final _emailController = TextEditingController();        // Email cá nhân dùng đăng nhập
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  final _authService = AuthService();
-  bool _isLoading = false;
-  
-  String _selectedUniversity = 'Đại học Kiến trúc Đà Nẵng';
-  final List<String> _universities = [
-    'Đại học Kiến trúc Đà Nẵng',
-    'Đại học Bách Khoa - ĐHĐN',
-    'Đại học Kinh tế - ĐHĐN',
-    'Đại học Sư phạm Kỹ thuật - ĐHĐN',
-  ];
 
+  final _authService = AuthService();
+  
+  bool _isLoading = false;
+  bool _isSendingOtp = false;
+  bool _otpSent = false;
+
+  // Gán mặc định tên trường duy nhất
+  static const String _defaultUniversity = 'Đại học Kiến trúc Đà Nẵng';
+
+  // Hàm gửi OTP về Email Sinh Viên
+  Future<void> _handleSendOTP() async {
+    final studentEmail = _studentEmailController.text.trim();
+    if (studentEmail.isEmpty || !studentEmail.contains('@')) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Vui lòng nhập Email sinh viên hợp lệ!'),
+          backgroundColor: Colors.orangeAccent,
+        ),
+      );
+      return;
+    }
+
+    setState(() => _isSendingOtp = true);
+
+    try {
+      await _authService.sendStudentVerificationOTP(
+        studentEmail: studentEmail,
+        personalEmail: _emailController.text.trim(),
+      );
+
+      if (mounted) {
+        setState(() => _otpSent = true);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('🎉 Mã OTP đã được gửi đến Email sinh viên của bạn!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Lỗi gửi OTP: ${e.toString()}'),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isSendingOtp = false);
+    }
+  }
+
+  // Hàm Đăng ký tài khoản
   Future<void> _handleRegister() async {
     if (!_formKey.currentState!.validate()) return;
+
+    if (!_otpSent) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Vui lòng bấm lấy và nhập mã OTP xác thực trước!'),
+          backgroundColor: Colors.orangeAccent,
+        ),
+      );
+      return;
+    }
 
     setState(() => _isLoading = true);
 
     try {
-      await _authService.signUp(
-        email: _emailController.text.trim(),
+      final studentEmail = _studentEmailController.text.trim();
+      // Tự động cắt phần trước @ làm Mã sinh viên (VD: 2011001@dau.edu.vn -> 2011001)
+      final studentId = studentEmail.split('@').first;
+
+      await _authService.verifyOTPAndRegister(
+        personalEmail: _emailController.text.trim(),
         password: _passwordController.text.trim(),
+        studentEmail: studentEmail,
+        inputOTP: _otpController.text.trim(),
         name: _nameController.text.trim(),
-        studentId: _studentIdController.text.trim(),
-        university: _selectedUniversity,
+        studentId: studentId,
+        university: _defaultUniversity,
       );
 
       if (mounted) {
@@ -63,7 +125,8 @@ class _RegisterViewState extends State<RegisterView> {
   @override
   void dispose() {
     _nameController.dispose();
-    _studentIdController.dispose();
+    _studentEmailController.dispose();
+    _otpController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
@@ -81,56 +144,90 @@ class _RegisterViewState extends State<RegisterView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              // 1. Họ và tên
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(
-                  labelText: 'Họ và tên',
+                  labelText: 'Tên tài khoản',
                   prefixIcon: Icon(Icons.person),
                   border: OutlineInputBorder(),
                 ),
-                validator: (val) => val == null || val.isEmpty ? 'Vui lòng nhập họ tên' : null,
+                validator: (val) => val == null || val.isEmpty ? 'Vui lòng nhập tên tài khoản (biệt danh)' : null,
               ),
               const SizedBox(height: 16),
+
+              // 2. Email Sinh Viên (Nhận OTP) + Nút Lấy mã
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _studentEmailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(
+                        labelText: 'Email sinh viên (nhận OTP)',
+                        hintText: 'VD: 2011001@dau.edu.vn',
+                        prefixIcon: Icon(Icons.mark_email_read),
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (val) {
+                        if (val == null || val.isEmpty) return 'Vui lòng nhập Email sinh viên';
+                        if (!val.contains('@')) return 'Email không hợp lệ';
+                        return null;
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  SizedBox(
+                    height: 56,
+                    child: ElevatedButton(
+                      onPressed: _isSendingOtp ? null : _handleSendOTP,
+                      child: _isSendingOtp
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : Text(_otpSent ? 'Gửi lại' : 'Lấy OTP'),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // 3. Ô Nhập Mã OTP
               TextFormField(
-                controller: _studentIdController,
-                decoration: const InputDecoration(
-                  labelText: 'Mã sinh viên',
-                  prefixIcon: Icon(Icons.badge),
-                  border: OutlineInputBorder(),
+                controller: _otpController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: 'Mã xác thực OTP (6 chữ số)',
+                  prefixIcon: const Icon(Icons.security),
+                  border: const OutlineInputBorder(),
+                  helperText: _otpSent ? 'Mã OTP đã gửi về Email sinh viên của bạn' : null,
+                  helperStyle: const TextStyle(color: Colors.green),
                 ),
-                validator: (val) => val == null || val.isEmpty ? 'Vui lòng nhập MSV' : null,
+                validator: (val) => val == null || val.isEmpty ? 'Vui lòng nhập mã OTP' : null,
               ),
               const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                initialValue: _selectedUniversity,
-                decoration: const InputDecoration(
-                  labelText: 'Trường Đại học',
-                  prefixIcon: Icon(Icons.school),
-                  border: OutlineInputBorder(),
-                ),
-                items: _universities.map((uni) {
-                  return DropdownMenuItem(value: uni, child: Text(uni));
-                }).toList(),
-                onChanged: (val) {
-                  if (val != null) setState(() => _selectedUniversity = val);
-                },
-              ),
-              const SizedBox(height: 16),
+
+              // 4. Email cá nhân (Dùng đăng nhập chính & khôi phục)
               TextFormField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: const InputDecoration(
-                  labelText: 'Email',
+                  labelText: 'Email cá nhân (Gmail/Outlook dùng đăng nhập)',
                   prefixIcon: Icon(Icons.email),
                   border: OutlineInputBorder(),
                 ),
                 validator: (val) {
-                  if (val == null || val.isEmpty) return 'Vui lòng nhập Email';
+                  if (val == null || val.isEmpty) return 'Vui lòng nhập Email cá nhân';
                   if (!val.contains('@')) return 'Email không hợp lệ';
                   return null;
                 },
               ),
               const SizedBox(height: 16),
+
+              // 5. Mật khẩu
               TextFormField(
                 controller: _passwordController,
                 obscureText: true,
@@ -146,7 +243,8 @@ class _RegisterViewState extends State<RegisterView> {
                 },
               ),
               const SizedBox(height: 16),
-              
+
+              // 6. Nhập lại Mật khẩu
               TextFormField(
                 controller: _confirmPasswordController,
                 obscureText: true,
@@ -161,8 +259,9 @@ class _RegisterViewState extends State<RegisterView> {
                   return null;
                 },
               ),
-              
               const SizedBox(height: 24),
+
+              // Nút Đăng ký
               SizedBox(
                 height: 50,
                 child: FilledButton(
