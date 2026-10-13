@@ -4,11 +4,16 @@ service cloud.firestore {
     function signedIn() { return request.auth != null; }
     function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
 
+    match /otp_requests/{docId} {
+      // Cho phép gửi và xác thực mã OTP trước khi tạo tài khoản
+      allow read, write: if true;
+    }
+
     match /users/{uid} {
       allow read: if signedIn();
       allow create: if isOwner(uid)
         && request.resource.data.points == 0
-        && request.resource.data.inventory is map;
+        && (request.resource.data.inventory is map || request.resource.data.inventory is list);
       // Prototype rule: clients can update their own profile. For production,
       // reward/purchase mutations should move behind trusted backend code.
       allow update: if isOwner(uid);
@@ -16,11 +21,10 @@ service cloud.firestore {
     }
 
     match /posts/{postId} {
-      allow read: if signedIn();
-      allow create: if signedIn() && request.resource.data.userId == request.auth.uid;
-      allow update: if signedIn() && request.resource.data.userId == resource.data.userId
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likedBy', 'comments']);
-      allow delete: if signedIn() && resource.data.userId == request.auth.uid;
+      allow read, write: if signedIn();
+      match /comments/{commentId} {
+        allow read, write: if signedIn();
+      }
     }
 
     match /documents/{documentId} {
@@ -33,11 +37,10 @@ service cloud.firestore {
     }
 
     match /reviews/{reviewId} {
-      allow read: if signedIn();
-      allow create: if signedIn() && request.resource.data.userId == request.auth.uid;
-      allow update: if signedIn() && request.resource.data.userId == resource.data.userId
-        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likedBy', 'comments']);
-      allow delete: if signedIn() && resource.data.userId == request.auth.uid;
+      allow read, write: if signedIn();
+      match /comments/{commentId} {
+        allow read, write: if signedIn();
+      }
     }
   }
 }

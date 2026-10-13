@@ -83,6 +83,48 @@ class ProfileView extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
 
+                // Thẻ Thông tin Email & Xác thực Sinh viên DAU
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                    child: Column(
+                      children: [
+                        ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading: const Icon(Icons.mark_email_read, color: Colors.green, size: 28),
+                          title: const Text('Email sinh viên DAU (xác thực)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                          subtitle: Text(
+                            user.studentEmail.isNotEmpty
+                                ? user.studentEmail
+                                : (user.msv.isNotEmpty ? '${user.msv}@dau.edu.vn' : 'Chưa cập nhật'),
+                            style: const TextStyle(fontSize: 13),
+                          ),
+                          trailing: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.green.withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(color: Colors.green),
+                            ),
+                            child: const Text('ĐÃ XÁC THỰC', style: TextStyle(color: Colors.green, fontSize: 11, fontWeight: FontWeight.bold)),
+                          ),
+                        ),
+                        const Divider(),
+                        ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading: const Icon(Icons.email, color: Colors.blueAccent, size: 28),
+                          title: const Text('Email đăng nhập chính', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                          subtitle: Text(
+                            user.email.isNotEmpty ? user.email : 'Chưa cập nhật',
+                            style: const TextStyle(fontSize: 13),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+
                 // 3. Thẻ Điểm tích lũy
                 Card(
                   child: ListTile(

@@ -1,6 +1,7 @@
 class UserModel {
   final String uid;
   final String email;
+  final String studentEmail;
   final String name;
   final String msv;
   final String university;
@@ -13,6 +14,7 @@ class UserModel {
   UserModel({
     required this.uid,
     required this.email,
+    this.studentEmail = '',
     required this.name,
     required this.msv,
     required this.university,
@@ -28,9 +30,10 @@ class UserModel {
   factory UserModel.fromMap(Map<String, dynamic> map, String uid) {
     return UserModel(
       uid: uid,
-      email: map['email'] ?? '',
+      email: map['email'] ?? map['personalEmail'] ?? '',
+      studentEmail: map['studentEmail'] ?? '',
       name: map['name'] ?? '',
-      msv: map['msv'] ?? '',
+      msv: map['msv'] ?? map['studentId'] ?? '',
       university: map['university'] ?? '',
       points: map['points'] ?? 0,
       inventory: List<String>.from(map['inventory'] ?? []),
@@ -44,8 +47,11 @@ class UserModel {
     return {
       'uid': uid,
       'email': email,
+      'personalEmail': email,
+      'studentEmail': studentEmail,
       'name': name,
       'msv': msv,
+      'studentId': msv,
       'university': university,
       'points': points,
       'inventory': inventory,

@@ -67,7 +67,17 @@ class _LoginViewState extends State<LoginView> {
                     const SizedBox(height: 12),
                     Text('Mạng Xã Hội Sinh Viên', style: Theme.of(context).textTheme.headlineSmall),
                     const SizedBox(height: 24),
-                    TextFormField(controller: _email, keyboardType: TextInputType.emailAddress, decoration: const InputDecoration(labelText: 'Email'), validator: (v) => v == null || !v.contains('@') ? 'Nhập email hợp lệ' : null),
+                    TextFormField(
+                      controller: _email,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(
+                        labelText: 'Email cá nhân đăng nhập',
+                        hintText: 'Nhập Gmail/Email cá nhân đã đăng ký',
+                        prefixIcon: Icon(Icons.email),
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (v) => v == null || !v.contains('@') ? 'Nhập email hợp lệ' : null,
+                    ),
                     const SizedBox(height: 12),
                     TextFormField(controller: _password, obscureText: true, decoration: const InputDecoration(labelText: 'Mật khẩu'), validator: (v) => v == null || v.length < 6 ? 'Mật khẩu tối thiểu 6 ký tự' : null),
                     const SizedBox(height: 20),

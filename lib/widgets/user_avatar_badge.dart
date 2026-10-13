@@ -39,7 +39,7 @@ class UserHeaderBadge extends StatelessWidget {
 
     // Glow shadow cho viền
     final glowColor = hasFrame
-        ? frameGradient!.first.withValues(alpha: 0.5)
+        ? frameGradient.first.withValues(alpha: 0.5)
         : (isAdmin ? Colors.redAccent.withValues(alpha: 0.4) : null);
 
     return Row(
@@ -50,7 +50,7 @@ class UserHeaderBadge extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             gradient: hasFrame
-                ? LinearGradient(colors: frameGradient!)
+                ? LinearGradient(colors: frameGradient)
                 : (isAdmin
                     ? const LinearGradient(
                         colors: [Colors.redAccent, Colors.deepOrange, Colors.orange],

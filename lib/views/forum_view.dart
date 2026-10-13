@@ -3,6 +3,7 @@ import '../models/post_model.dart';
 import '../models/user_model.dart';
 import '../services/database_service.dart';
 import '../widgets/user_avatar_badge.dart';
+import '../widgets/comments_sheet.dart';
 
 class ForumView extends StatefulWidget {
   const ForumView({super.key});
@@ -92,6 +93,20 @@ class _ForumViewState extends State<ForumView> {
     if (diff.inHours < 24) return '${diff.inHours} giờ trước';
     if (diff.inDays < 7) return '${diff.inDays} ngày trước';
     return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
+  }
+
+  void _openComments(PostModel post, UserModel? currentUser, bool isAdmin) {
+    CommentsSheet.show(
+      context: context,
+      title: 'Bình luận: ${post.authorName}',
+      subtitle: post.content,
+      commentsStream: _db.postCommentsStream(post.id),
+      onSendComment: (content) => _db.createPostComment(postId: post.id, content: content),
+      onDeleteComment: (commentId) => _db.deletePostComment(postId: post.id, commentId: commentId),
+      currentUserId: _db.uid,
+      isAdmin: isAdmin,
+      currentUser: currentUser,
+    );
   }
 
   @override
@@ -283,11 +298,7 @@ class _ForumViewState extends State<ForumView> {
                                       ),
                                       const SizedBox(width: 16),
                                       TextButton.icon(
-                                        onPressed: () {
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            const SnackBar(content: Text('Tính năng bình luận chi tiết đang được phát triển!')),
-                                          );
-                                        },
+                                        onPressed: () => _openComments(post, currentUser, isAdmin),
                                         icon: const Icon(Icons.mode_comment_outlined, size: 18, color: Colors.grey),
                                         label: Text(
                                           '${post.commentsCount} Bình luận',

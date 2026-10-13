@@ -4,6 +4,7 @@ import '../models/user_model.dart';
 import '../models/post_model.dart';
 import '../models/document_model.dart';
 import '../models/review_model.dart';
+import '../models/comment_model.dart';
 
 class DatabaseService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -104,6 +105,54 @@ class DatabaseService {
     await _db.collection('posts').doc(postId).delete();
   }
 
+  // POST COMMENTS (BÌNH LUẬN BÀI VIẾT)
+  Stream<List<CommentModel>> postCommentsStream(String postId) {
+    return _db
+        .collection('posts')
+        .doc(postId)
+        .collection('comments')
+        .orderBy('createdAt', descending: false)
+        .snapshots()
+        .map((snap) => snap.docs.map((doc) => CommentModel.fromMap(doc.data(), doc.id)).toList());
+  }
+
+  Future<void> createPostComment({
+    required String postId,
+    required String content,
+  }) async {
+    final trimmed = content.trim();
+    if (trimmed.isEmpty || uid.isEmpty) return;
+
+    final user = await getUser(uid);
+    final commentRef = _db.collection('posts').doc(postId).collection('comments').doc();
+
+    await commentRef.set({
+      'id': commentRef.id,
+      'authorId': uid,
+      'authorName': user.name,
+      'authorEquipped': user.equipped.values.toList(),
+      'content': trimmed,
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+
+    await _db.collection('posts').doc(postId).update({
+      'commentsCount': FieldValue.increment(1),
+    });
+
+    // Cộng điểm tương tác bình luận (+2 pts)
+    await addPoints(uid, 2);
+  }
+
+  Future<void> deletePostComment({
+    required String postId,
+    required String commentId,
+  }) async {
+    await _db.collection('posts').doc(postId).collection('comments').doc(commentId).delete();
+    await _db.collection('posts').doc(postId).update({
+      'commentsCount': FieldValue.increment(-1),
+    });
+  }
+
   // DOCUMENTS
   Stream<List<DocumentModel>> documentsStream() {
     return _db
@@ -162,6 +211,7 @@ class DatabaseService {
       'rating': rating,
       'comment': comment,
       'tags': tags,
+      'commentsCount': 0,
       'createdAt': FieldValue.serverTimestamp(),
     });
 
@@ -170,6 +220,54 @@ class DatabaseService {
 
   Future<void> deleteReview(String reviewId) async {
     await _db.collection('reviews').doc(reviewId).delete();
+  }
+
+  // REVIEW COMMENTS (BÌNH LUẬN TRẠM REVIEW)
+  Stream<List<CommentModel>> reviewCommentsStream(String reviewId) {
+    return _db
+        .collection('reviews')
+        .doc(reviewId)
+        .collection('comments')
+        .orderBy('createdAt', descending: false)
+        .snapshots()
+        .map((snap) => snap.docs.map((doc) => CommentModel.fromMap(doc.data(), doc.id)).toList());
+  }
+
+  Future<void> createReviewComment({
+    required String reviewId,
+    required String content,
+  }) async {
+    final trimmed = content.trim();
+    if (trimmed.isEmpty || uid.isEmpty) return;
+
+    final user = await getUser(uid);
+    final commentRef = _db.collection('reviews').doc(reviewId).collection('comments').doc();
+
+    await commentRef.set({
+      'id': commentRef.id,
+      'authorId': uid,
+      'authorName': user.name,
+      'authorEquipped': user.equipped.values.toList(),
+      'content': trimmed,
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+
+    await _db.collection('reviews').doc(reviewId).update({
+      'commentsCount': FieldValue.increment(1),
+    });
+
+    // Cộng điểm tương tác bình luận (+2 pts)
+    await addPoints(uid, 2);
+  }
+
+  Future<void> deleteReviewComment({
+    required String reviewId,
+    required String commentId,
+  }) async {
+    await _db.collection('reviews').doc(reviewId).collection('comments').doc(commentId).delete();
+    await _db.collection('reviews').doc(reviewId).update({
+      'commentsCount': FieldValue.increment(-1),
+    });
   }
 
   // STORE (TRANSACTION)

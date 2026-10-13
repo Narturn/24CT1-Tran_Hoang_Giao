@@ -10,6 +10,7 @@ class ReviewModel {
   final double rating;
   final String comment;
   final List<String> tags;
+  final int commentsCount;
   final DateTime? createdAt;
 
   ReviewModel({
@@ -22,6 +23,7 @@ class ReviewModel {
     required this.rating,
     required this.comment,
     required this.tags,
+    this.commentsCount = 0,
     this.createdAt,
   });
 
@@ -30,12 +32,13 @@ class ReviewModel {
       id: docId,
       authorId: map['authorId'] ?? map['userId'] ?? '',
       authorName: map['authorName'] ?? map['userName'] ?? 'Sinh viên',
-      authorEquipped: List<String>.from(map['authorEquipped'] ?? []), // <--- Đọc dữ liệu trang bị từ Firestore
+      authorEquipped: List<String>.from(map['authorEquipped'] ?? []),
       targetName: map['targetName'] ?? map['subject'] ?? map['teacher'] ?? '',
       category: map['category'] ?? 'Môn học',
       rating: (map['rating'] as num?)?.toDouble() ?? 5.0,
       comment: map['comment'] ?? map['content'] ?? '',
       tags: List<String>.from(map['tags'] ?? []),
+      commentsCount: map['commentsCount'] ?? 0,
       createdAt: (map['createdAt'] as Timestamp?)?.toDate(),
     );
   }
@@ -50,6 +53,7 @@ class ReviewModel {
       'rating': rating,
       'comment': comment,
       'tags': tags,
+      'commentsCount': commentsCount,
       'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : FieldValue.serverTimestamp(),
     };
   }

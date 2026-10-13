@@ -3,6 +3,7 @@ import '../models/review_model.dart';
 import '../models/user_model.dart';
 import '../services/database_service.dart';
 import '../widgets/user_avatar_badge.dart';
+import '../widgets/comments_sheet.dart';
 
 class ReviewsView extends StatefulWidget {
   const ReviewsView({super.key});
@@ -14,6 +15,30 @@ class ReviewsView extends StatefulWidget {
 class _ReviewsViewState extends State<ReviewsView> {
   final _db = DatabaseService();
   String _selectedTag = 'Tất cả';
+
+  String _formatTimeAgo(DateTime? dateTime) {
+    if (dateTime == null) return 'Vừa xong';
+    final diff = DateTime.now().difference(dateTime);
+    if (diff.inSeconds < 60) return 'Vừa xong';
+    if (diff.inMinutes < 60) return '${diff.inMinutes} phút trước';
+    if (diff.inHours < 24) return '${diff.inHours} giờ trước';
+    if (diff.inDays < 7) return '${diff.inDays} ngày trước';
+    return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
+  }
+
+  void _openComments(ReviewModel review, UserModel? currentUser, bool isAdmin) {
+    CommentsSheet.show(
+      context: context,
+      title: 'Bình luận: ${review.targetName}',
+      subtitle: '${review.authorName}: ${review.comment}',
+      commentsStream: _db.reviewCommentsStream(review.id),
+      onSendComment: (content) => _db.createReviewComment(reviewId: review.id, content: content),
+      onDeleteComment: (commentId) => _db.deleteReviewComment(reviewId: review.id, commentId: commentId),
+      currentUserId: _db.uid,
+      isAdmin: isAdmin,
+      currentUser: currentUser,
+    );
+  }
 
   Future<void> _confirmDeleteReview(ReviewModel review) async {
     final confirm = await showDialog<bool>(
@@ -197,6 +222,7 @@ class _ReviewsViewState extends State<ReviewsView> {
                                                 child: UserHeaderBadge(
                                                   name: item.authorName,
                                                   inventory: item.authorEquipped,
+                                                  subtitle: '${item.category} • ${_formatTimeAgo(item.createdAt)}',
                                                 ),
                                               ),
                                               if (canDelete)
@@ -213,13 +239,13 @@ class _ReviewsViewState extends State<ReviewsView> {
 
                                           // Tiêu đề môn / địa điểm
                                           Text(
-                                            '${item.targetName} [${item.category}]',
+                                            item.targetName,
                                             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                                           ),
                                           const SizedBox(height: 4),
 
                                           // Nội dung review
-                                          Text(item.comment),
+                                          Text(item.comment, style: const TextStyle(fontSize: 14, height: 1.4)),
                                           const SizedBox(height: 8),
 
                                           // Thẻ Hashtags
@@ -233,6 +259,22 @@ class _ReviewsViewState extends State<ReviewsView> {
                                                       ))
                                                   .toList(),
                                             ),
+
+                                          const Divider(height: 16),
+
+                                          // Nút xem và thêm bình luận
+                                          Row(
+                                            children: [
+                                              TextButton.icon(
+                                                onPressed: () => _openComments(item, currentUser, isAdmin),
+                                                icon: const Icon(Icons.mode_comment_outlined, size: 18, color: Colors.grey),
+                                                label: Text(
+                                                  '${item.commentsCount} Bình luận',
+                                                  style: TextStyle(color: Colors.grey.shade300),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ],
                                       ),
                                     ),
