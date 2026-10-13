@@ -71,8 +71,8 @@ class _LoginViewState extends State<LoginView> {
                       controller: _email,
                       keyboardType: TextInputType.emailAddress,
                       decoration: const InputDecoration(
-                        labelText: 'Email cá nhân đăng nhập',
-                        hintText: 'Nhập Gmail/Email cá nhân đã đăng ký',
+                        labelText: 'Email sinh viên',
+                        hintText: 'Nhập Gmail/Email sinh viên đã đăng ký',
                         prefixIcon: Icon(Icons.email),
                         border: OutlineInputBorder(),
                       ),

@@ -1,85 +1,139 @@
-import 'dart:developer' as developer;
-import 'package:emailjs/emailjs.dart' as emailjs;
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+import 'package:emailjs/emailjs.dart';
 
-/// Dịch vụ gửi email thông qua EmailJS (https://www.emailjs.com/)
-/// Giúp gửi email OTP trực tiếp từ Flutter đến sinh viên mà không cần backend riêng.
+class EmailSendResult {
+  final bool success;
+  final String? errorMessage;
+
+  EmailSendResult({
+    required this.success,
+    this.errorMessage,
+  });
+}
+
 class EmailService {
-  // ===========================================================================
-  // ⚙️ CẤU HÌNH EMAILJS:
-  // Bạn có thể đăng ký tài khoản miễn phí tại https://www.emailjs.com/
-  // (Miễn phí 200 email/tháng, đủ cho nhu cầu đồ án/demo).
-  //
-  // 1. serviceId: Lấy từ mục 'Email Services' (VD: 'service_xxxxxx')
-  // 2. templateId: Lấy từ mục 'Email Templates' (VD: 'template_xxxxxx')
-  // 3. publicKey: Lấy từ mục 'Account' -> 'API Keys' -> 'Public Key' (VD: 'user_xxxx' hoặc 'pub_xxxx')
-  // ===========================================================================
-  static const String serviceId = 'YOUR_SERVICE_ID';
-  static const String templateId = 'YOUR_TEMPLATE_ID';
-  static const String publicKey = 'YOUR_PUBLIC_KEY';
-  static const String? privateKey = null; // Tùy chọn nếu bật private key
+  // Cấu hình EmailJS từ người dùng
+  static const String _serviceId = 'service_ava742e';
+  static const String _templateId = 'template_oeykbq9';
+  static const String _publicKey = 'oEjGs5K_T0q-LbY34';
 
-  /// Kiểm tra xem người dùng đã cấu hình khóa EmailJS hay chưa
-  static bool get isConfigured =>
-      serviceId.isNotEmpty &&
-      serviceId != 'YOUR_SERVICE_ID' &&
-      templateId.isNotEmpty &&
-      templateId != 'YOUR_TEMPLATE_ID' &&
-      publicKey.isNotEmpty &&
-      publicKey != 'YOUR_PUBLIC_KEY';
-
-  /// Gửi mã OTP xác nhận về địa chỉ Email sinh viên
-  /// - Trả về `true` nếu đã gửi email thực tế thành công qua EmailJS.
-  /// - Trả về `false` nếu chưa cấu hình EmailJS (hệ thống sẽ hoạt động ở chế độ Demo/Test).
-  static Future<bool> sendStudentOtp({
+  /// Gửi mã OTP xác thực đến Email (Gmail hoặc Email sinh viên)
+  static Future<EmailSendResult> sendStudentOtp({
     required String studentEmail,
     required String otp,
     String? studentName,
   }) async {
-    if (!isConfigured) {
-      developer.log(
-        '⚠️ EmailJS chưa được cấu hình khóa (serviceId/templateId/publicKey). '
-        'Hệ thống đang chạy ở chế độ TEST DEMO.\n'
-        '👉 Mã OTP gửi đến $studentEmail là: $otp',
-        name: 'EmailService',
-      );
-      return false; // Chế độ Test/Demo
+    return sendOtp(
+      targetEmail: studentEmail,
+      otp: otp,
+      studentName: studentName,
+    );
+  }
+
+  /// Hàm gửi OTP linh hoạt với đầy đủ biến template
+  static Future<EmailSendResult> sendOtp({
+    required String targetEmail,
+    required String otp,
+    String? studentName,
+  }) async {
+    final cleanEmail = targetEmail.trim().toLowerCase();
+    if (cleanEmail.isEmpty) {
+      return EmailSendResult(success: false, errorMessage: 'Địa chỉ email rỗng');
     }
 
+    if (_publicKey.isEmpty || _publicKey == 'THAY_PUBLIC_KEY_CUABAN_VAO_DAY') {
+      debugPrint('⚠️ EmailJS: Public Key chưa được cấu hình.');
+      return EmailSendResult(
+        success: false,
+        errorMessage: 'Chưa cấu hình Public Key EmailJS',
+      );
+    }
+
+    final name = (studentName != null && studentName.trim().isNotEmpty)
+        ? studentName.trim()
+        : 'Sinh viên';
+
+    // Tập hợp đầy đủ các tên tham số phổ biến trong template EmailJS
+    final templateParams = <String, dynamic>{
+      'to_email': cleanEmail,
+      'email': cleanEmail,
+      'user_email': cleanEmail,
+      'student_email': cleanEmail,
+      'reply_to': cleanEmail,
+      'otp_code': otp,
+      'otp': otp,
+      'code': otp,
+      'passcode': otp,
+      'student_name': name,
+      'to_name': name,
+      'user_name': name,
+      'name': name,
+      'message':
+          'Mã OTP xác thực của bạn là: $otp (hiệu lực trong 5 phút). Tuyệt đối không chia sẻ mã này cho người khác.',
+    };
+
+    String? lastError;
+
+    // 1. Thử gửi qua EmailJS Flutter SDK chính thức
     try {
-      final templateParams = {
-        'to_email': studentEmail,
-        'email': studentEmail,
-        'student_email': studentEmail,
-        'to_name': studentName ?? studentEmail.split('@').first,
-        'otp': otp,
-        'otp_code': otp,
-        'university': 'Đại học Kiến trúc Đà Nẵng',
-        'message':
-            'Mã OTP xác thực sinh viên Trường ĐH Kiến trúc Đà Nẵng của bạn là: $otp. Mã có hiệu lực trong 5 phút.',
-      };
-
-      await emailjs.send(
-        serviceId,
-        templateId,
+      final response = await EmailJS.send(
+        _serviceId,
+        _templateId,
         templateParams,
-        const emailjs.Options(
-          publicKey: publicKey,
-          privateKey: privateKey,
-        ),
+        const Options(publicKey: _publicKey),
       );
 
-      developer.log(
-        '✅ Đã gửi thành công email OTP đến $studentEmail qua EmailJS',
-        name: 'EmailService',
-      );
-      return true;
+      if (response.status == 200) {
+        debugPrint('✅ EmailJS SDK: Gửi OTP thành công tới $cleanEmail');
+        return EmailSendResult(success: true);
+      }
     } catch (e) {
-      developer.log(
-        '❌ Lỗi khi gửi OTP qua EmailJS: $e',
-        name: 'EmailService',
-        error: e,
+      lastError = e.toString();
+      debugPrint('⚠️ EmailJS SDK error ($e), đang thử fallback qua HTTP REST API...');
+    }
+
+    // 2. Dự phòng: Gửi trực tiếp qua EmailJS REST API
+    try {
+      final url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
+      final headers = <String, String>{
+        'Content-Type': 'application/json',
+      };
+      if (!kIsWeb) {
+        headers['origin'] = 'http://localhost';
+      }
+
+      final httpResponse = await http.post(
+        url,
+        headers: headers,
+        body: jsonEncode({
+          'service_id': _serviceId,
+          'template_id': _templateId,
+          'user_id': _publicKey,
+          'template_params': templateParams,
+        }),
       );
-      rethrow;
+
+      if (httpResponse.statusCode == 200) {
+        debugPrint('✅ EmailJS HTTP: Gửi OTP thành công tới $cleanEmail');
+        return EmailSendResult(success: true);
+      } else {
+        final errorBody = httpResponse.body.isNotEmpty
+            ? httpResponse.body
+            : 'Mã phản hồi HTTP ${httpResponse.statusCode}';
+        debugPrint('❌ EmailJS HTTP Error: [${httpResponse.statusCode}] $errorBody');
+        return EmailSendResult(
+          success: false,
+          errorMessage: errorBody,
+        );
+      }
+    } catch (e) {
+      debugPrint('❌ Lỗi ngoại lệ khi gửi EmailJS HTTP: $e');
+      return EmailSendResult(
+        success: false,
+        errorMessage: lastError ?? e.toString(),
+      );
     }
   }
 }

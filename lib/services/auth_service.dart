@@ -6,7 +6,7 @@ import 'email_service.dart';
 class OtpSendResult {
   final bool success;
   final bool isRealEmail;
-  final String? otpCode; // Dùng để hiển thị trong môi trường demo/thử nghiệm khi chưa cấu hình EmailJS
+  final String? otpCode;
   final String message;
 
   OtpSendResult({
@@ -33,17 +33,11 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Bộ nhớ đệm tạm thời cho OTP để hỗ trợ test mượt mà
   static final Map<String, _LocalOtpEntry> _localOtpCache = {};
 
-  // 1. Stream lắng nghe trạng thái đăng nhập (dùng ở main.dart)
   Stream<User?> get authStateChanges => _auth.authStateChanges();
-
-  // 2. Lấy user hiện tại
   User? get currentUser => _auth.currentUser;
 
-  // 3. Hàm Đăng nhập bằng Email & Mật khẩu (dùng ở login_view.dart)
-  // Lưu ý: Đăng nhập bằng EMAIL CÁ NHÂN chính thức của người dùng
   Future<UserCredential> signIn({
     required String email,
     required String password,
@@ -54,146 +48,119 @@ class AuthService {
     );
   }
 
-  // 4. Hàm Đăng xuất
   Future<void> signOut() async {
     await _auth.signOut();
   }
 
-  // 5. Hàm gửi OTP xác thực đến Email sinh viên (...@dau.edu.vn)
   Future<OtpSendResult> sendStudentVerificationOTP({
     required String studentEmail,
-    required String personalEmail,
     String? name,
   }) async {
-    final cleanStudentEmail = studentEmail.trim().toLowerCase();
-    final cleanPersonalEmail = personalEmail.trim().toLowerCase();
+    final cleanEmail = studentEmail.trim().toLowerCase();
 
-    // Kiểm tra định dạng Email sinh viên Đại học Kiến trúc Đà Nẵng
-    final dauEmailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@dau\.edu\.vn$');
-    if (!dauEmailRegex.hasMatch(cleanStudentEmail)) {
-      throw Exception('Email sinh viên phải có đuôi @dau.edu.vn (VD: 2011001@dau.edu.vn)!');
+    final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@(dau\.edu\.vn|gmail\.com)$');
+    if (!emailRegex.hasMatch(cleanEmail)) {
+      throw Exception('Email phải có đuôi @dau.edu.vn hoặc @gmail.com!');
     }
 
-    // Kiểm tra email cá nhân không được trùng email sinh viên
-    if (cleanPersonalEmail.isNotEmpty && cleanPersonalEmail == cleanStudentEmail) {
-      throw Exception('Email cá nhân dùng đăng nhập không được trùng với Email sinh viên!');
-    }
-
-    // Kiểm tra xem Email sinh viên này đã được liên kết với tài khoản nào chưa
     try {
-      final existingStudent = await _firestore
+      final existingUser = await _firestore
           .collection('users')
-          .where('studentEmail', isEqualTo: cleanStudentEmail)
+          .where('email', isEqualTo: cleanEmail)
           .limit(1)
           .get();
 
-      if (existingStudent.docs.isNotEmpty) {
-        throw Exception('Email sinh viên này đã được liên kết với một tài khoản khác!');
+      if (existingUser.docs.isNotEmpty) {
+        throw Exception('Email này đã được đăng ký tài khoản!');
       }
     } catch (e) {
-      if (e.toString().contains('liên kết với một tài khoản khác')) {
+      if (e.toString().contains('đã được đăng ký tài khoản')) {
         rethrow;
       }
     }
 
-    // Sinh ngẫu nhiên mã OTP 6 chữ số
     final random = Random();
     final otp = (100000 + random.nextInt(900000)).toString();
     final expiresAt = DateTime.now().add(const Duration(minutes: 5));
 
-    // Lưu mã OTP vào Firestore & Cache bộ nhớ
-    final docId = cleanStudentEmail.replaceAll('/', '_');
+    final docId = cleanEmail.replaceAll('/', '_');
     _localOtpCache[docId] = _LocalOtpEntry(
       otp: otp,
       expiresAt: expiresAt,
-      studentEmail: cleanStudentEmail,
+      studentEmail: cleanEmail,
     );
 
     try {
       await _firestore.collection('otp_requests').doc(docId).set({
-        'studentEmail': cleanStudentEmail,
-        'personalEmail': cleanPersonalEmail,
+        'studentEmail': cleanEmail,
         'otp': otp,
         'createdAt': FieldValue.serverTimestamp(),
         'expiresAt': Timestamp.fromDate(expiresAt),
       });
-    } catch (_) {
-      // Nếu Firestore rules chưa mở hoặc offline, bộ nhớ đệm _localOtpCache vẫn đảm bảo xác thực
-    }
+    } catch (_) {}
 
-    // Gửi OTP đến hộp thư sinh viên qua EmailService (EmailJS)
-    final isRealSent = await EmailService.sendStudentOtp(
-      studentEmail: cleanStudentEmail,
+    final sendResult = await EmailService.sendStudentOtp(
+      studentEmail: cleanEmail,
       otp: otp,
       studentName: name,
     );
 
-    if (isRealSent) {
+    if (sendResult.success) {
       return OtpSendResult(
         success: true,
         isRealEmail: true,
-        message: 'Mã OTP đã được gửi đến email sinh viên: $cleanStudentEmail',
+        message: 'Mã OTP đã được gửi đến email: $cleanEmail. Vui lòng kiểm tra hộp thư (hoặc mục Spam)!',
       );
     } else {
+      final reason = (sendResult.errorMessage != null && sendResult.errorMessage!.isNotEmpty)
+          ? sendResult.errorMessage!
+          : 'Lỗi kết nối EmailJS';
       return OtpSendResult(
         success: true,
         isRealEmail: false,
         otpCode: otp,
-        message: 'Mã OTP thử nghiệm: $otp (do chưa cấu hình EmailJS)',
+        message: 'Lỗi EmailJS ($reason). Mã OTP dự phòng: $otp',
       );
     }
   }
 
-  // 6. Hàm xác thực OTP và Đăng ký tài khoản
-  // - Email đăng nhập chính: personalEmail (Gmail/Outlook cá nhân)
-  // - Email sinh viên: studentEmail (chỉ dùng để xác thực và cấp mã SV)
   Future<UserCredential> verifyOTPAndRegister({
-    required String personalEmail,
-    required String password,
     required String studentEmail,
+    required String password,
     required String inputOTP,
     required String name,
     required String studentId,
     required String university,
   }) async {
-    final cleanStudentEmail = studentEmail.trim().toLowerCase();
-    final cleanPersonalEmail = personalEmail.trim().toLowerCase();
+    final cleanEmail = studentEmail.trim().toLowerCase();
     final trimmedOTP = inputOTP.trim();
 
-    // 1. Kiểm tra email sinh viên
-    final dauEmailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@dau\.edu\.vn$');
-    if (!dauEmailRegex.hasMatch(cleanStudentEmail)) {
-      throw Exception('Email sinh viên phải có đuôi @dau.edu.vn (VD: 2011001@dau.edu.vn)!');
+    final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@(dau\.edu\.vn|gmail\.com)$');
+    if (!emailRegex.hasMatch(cleanEmail)) {
+      throw Exception('Email phải có đuôi @dau.edu.vn hoặc @gmail.com!');
     }
 
     if (trimmedOTP.isEmpty) {
       throw Exception('Vui lòng nhập mã OTP!');
     }
 
-    // 2. Kiểm tra email cá nhân không được trùng email sinh viên
-    if (cleanPersonalEmail == cleanStudentEmail) {
-      throw Exception('Email cá nhân dùng đăng nhập không được trùng với Email sinh viên!');
-    }
-
-    // 3. Kiểm tra xem email sinh viên này đã có tài khoản nào đăng ký trước đó chưa
     try {
-      final existingStudent = await _firestore
+      final existingUser = await _firestore
           .collection('users')
-          .where('studentEmail', isEqualTo: cleanStudentEmail)
+          .where('email', isEqualTo: cleanEmail)
           .limit(1)
           .get();
 
-      if (existingStudent.docs.isNotEmpty) {
-        throw Exception('Email sinh viên này đã được liên kết với một tài khoản khác!');
+      if (existingUser.docs.isNotEmpty) {
+        throw Exception('Email này đã được đăng ký tài khoản!');
       }
     } catch (e) {
-      if (e.toString().contains('liên kết với một tài khoản khác')) {
+      if (e.toString().contains('đã được đăng ký tài khoản')) {
         rethrow;
       }
     }
 
-    // 4. Lấy mã OTP từ Firestore hoặc Memory Cache
-    final docId = cleanStudentEmail.replaceAll('/', '_');
+    final docId = cleanEmail.replaceAll('/', '_');
     String? validOtp;
     DateTime? expiresAt;
 
@@ -216,7 +183,7 @@ class AuthService {
     }
 
     if (validOtp == null) {
-      throw Exception('Chưa có mã OTP nào cho email $cleanStudentEmail. Vui lòng bấm "Lấy OTP" trước!');
+      throw Exception('Chưa có mã OTP nào cho email $cleanEmail. Vui lòng bấm "Lấy OTP" trước!');
     }
 
     if (expiresAt != null && DateTime.now().isAfter(expiresAt)) {
@@ -227,13 +194,11 @@ class AuthService {
       throw Exception('Mã OTP xác thực không chính xác. Vui lòng kiểm tra lại!');
     }
 
-    // 5. Đăng ký tài khoản Firebase Auth bằng EMAIL CÁ NHÂN làm email chính đăng nhập
     UserCredential credential = await _auth.createUserWithEmailAndPassword(
-      email: cleanPersonalEmail,
+      email: cleanEmail,
       password: password.trim(),
     );
 
-    // 6. Cập nhật Display Name và Lưu thông tin sinh viên vào Firestore
     if (credential.user != null) {
       try {
         await credential.user!.updateDisplayName(name.trim());
@@ -242,11 +207,10 @@ class AuthService {
       await _firestore.collection('users').doc(credential.user!.uid).set({
         'uid': credential.user!.uid,
         'name': name.trim(),
-        'email': cleanPersonalEmail,          // Email đăng nhập chính
-        'personalEmail': cleanPersonalEmail,  // Email cá nhân
-        'studentEmail': cleanStudentEmail,    // Email sinh viên (chỉ để xác thực)
+        'email': cleanEmail,
+        'studentEmail': cleanEmail,
         'studentId': studentId.trim(),
-        'msv': studentId.trim(),              // Mã sinh viên DAU
+        'msv': studentId.trim(),
         'university': university.trim(),
         'points': 0,
         'inventory': <String>[],
@@ -257,7 +221,6 @@ class AuthService {
         'createdAt': FieldValue.serverTimestamp(),
       });
 
-      // 7. Dọn dẹp mã OTP sau khi xác nhận thành công
       _localOtpCache.remove(docId);
       try {
         await _firestore.collection('otp_requests').doc(docId).delete();

@@ -16,9 +16,8 @@ class _RegisterViewState extends State<RegisterView> {
   final _formKey = GlobalKey<FormState>();
 
   final _nameController = TextEditingController();
-  final _studentEmailController = TextEditingController(); // Email trường để nhận OTP
+  final _studentEmailController = TextEditingController(); // Email đăng ký & nhận OTP
   final _otpController = TextEditingController();          // Mã OTP xác thực
-  final _emailController = TextEditingController();       // Email cá nhân dùng đăng nhập
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
@@ -35,7 +34,7 @@ class _RegisterViewState extends State<RegisterView> {
   int _countdown = 0;
   String? _sentToStudentEmail;
 
-  // Gán mặc định tên trường duy nhất
+  // Mặc định tên trường
   static const String _defaultUniversity = 'Đại học Kiến trúc Đà Nẵng';
 
   @override
@@ -44,7 +43,6 @@ class _RegisterViewState extends State<RegisterView> {
     _nameController.dispose();
     _studentEmailController.dispose();
     _otpController.dispose();
-    _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
@@ -63,25 +61,25 @@ class _RegisterViewState extends State<RegisterView> {
     });
   }
 
-  // Kiểm tra định dạng Email sinh viên Đại học Kiến trúc Đà Nẵng
-  bool _isDauStudentEmail(String email) {
+  // Kiểm tra định dạng Email (@dau.edu.vn hoặc @gmail.com)
+  bool _isValidEmail(String email) {
     final clean = email.trim().toLowerCase();
-    final regex = RegExp(r'^[a-zA-Z0-9._%+-]+@dau\.edu\.vn$');
+    final regex = RegExp(r'^[a-zA-Z0-9._%+-]+@(dau\.edu\.vn|gmail\.com)$');
     return regex.hasMatch(clean);
   }
 
-  // 1. Hàm gửi OTP về Email Sinh Viên
+  // 1. Hàm gửi OTP về Email
   Future<void> _handleSendOTP() async {
     final studentEmail = _studentEmailController.text.trim();
 
     if (studentEmail.isEmpty) {
-      _showSnackbar('Vui lòng nhập Email sinh viên trước!', isError: true);
+      _showSnackbar('Vui lòng nhập Email trước!', isError: true);
       return;
     }
 
-    if (!_isDauStudentEmail(studentEmail)) {
+    if (!_isValidEmail(studentEmail)) {
       _showSnackbar(
-        'Email sinh viên bắt buộc phải có đuôi @dau.edu.vn (VD: name_24512200xx@dau.edu.vn)!',
+        'Email phải có đuôi @dau.edu.vn hoặc @gmail.com!',
         isError: true,
       );
       return;
@@ -92,7 +90,6 @@ class _RegisterViewState extends State<RegisterView> {
     try {
       final result = await _authService.sendStudentVerificationOTP(
         studentEmail: studentEmail,
-        personalEmail: _emailController.text.trim(),
         name: _nameController.text.trim(),
       );
 
@@ -106,10 +103,9 @@ class _RegisterViewState extends State<RegisterView> {
         if (result.isRealEmail) {
           _showSnackbar('🎉 ${result.message}', isSuccess: true);
         } else {
-          // Thông báo hỗ trợ test trực tiếp khi chưa cấu hình EmailJS
           _showSnackbar(
-            '⚡ [CHẾ ĐỘ TEST] Mã OTP của bạn là: ${result.otpCode}\n(Do chưa cấu hình EmailJS, hệ thống hiển thị trực tiếp mã OTP để bạn thử nghiệm).',
-            isWarning: true,
+            '⚠️ ${result.message}\n(Kiểm tra console hoặc EmailJS Service ID/Security để xem chi tiết)',
+            isError: true,
             durationSeconds: 8,
           );
         }
@@ -128,28 +124,18 @@ class _RegisterViewState extends State<RegisterView> {
     if (!_formKey.currentState!.validate()) return;
 
     final studentEmail = _studentEmailController.text.trim().toLowerCase();
-    final personalEmail = _emailController.text.trim().toLowerCase();
 
     // Kiểm tra đã lấy OTP chưa
     if (!_otpSent || _sentToStudentEmail == null) {
-      _showSnackbar('Vui lòng bấm "Lấy OTP" để xác thực email sinh viên trước!', isWarning: true);
+      _showSnackbar('Vui lòng bấm "Lấy OTP" để xác thực email trước!', isWarning: true);
       return;
     }
 
-    // Kiểm tra xem email sinh viên có bị thay đổi sau khi gửi OTP không
+    // Kiểm tra xem email có bị thay đổi sau khi gửi OTP không
     if (studentEmail != _sentToStudentEmail) {
       _showSnackbar(
-        'Email sinh viên đã bị thay đổi so với mã OTP được gửi! Vui lòng bấm "Lấy OTP" lại.',
+        'Email đã bị thay đổi so với mã OTP được gửi! Vui lòng bấm "Lấy OTP" lại.',
         isWarning: true,
-      );
-      return;
-    }
-
-    // Kiểm tra email cá nhân không được trùng email sinh viên
-    if (personalEmail == studentEmail) {
-      _showSnackbar(
-        'Email cá nhân (dùng đăng nhập) không được trùng với Email sinh viên (xác thực)!',
-        isError: true,
       );
       return;
     }
@@ -161,9 +147,8 @@ class _RegisterViewState extends State<RegisterView> {
       final studentId = studentEmail.split('@').first;
 
       await _authService.verifyOTPAndRegister(
-        personalEmail: personalEmail,
-        password: _passwordController.text.trim(),
         studentEmail: studentEmail,
+        password: _passwordController.text.trim(),
         inputOTP: _otpController.text.trim(),
         name: _nameController.text.trim(),
         studentId: studentId,
@@ -180,11 +165,11 @@ class _RegisterViewState extends State<RegisterView> {
       if (mounted) {
         String msg = 'Đăng ký thất bại';
         if (e.code == 'email-already-in-use') {
-          msg = 'Email cá nhân này đã được đăng ký tài khoản trước đó!';
+          msg = 'Email này đã được đăng ký tài khoản trước đó!';
         } else if (e.code == 'weak-password') {
           msg = 'Mật khẩu quá yếu (cần tối thiểu 6 ký tự).';
         } else if (e.code == 'invalid-email') {
-          msg = 'Email cá nhân không hợp lệ.';
+          msg = 'Email không hợp lệ.';
         } else {
           msg = e.message ?? msg;
         }
@@ -264,7 +249,7 @@ class _RegisterViewState extends State<RegisterView> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Cơ chế xác thực Sinh viên DAU',
+                                  'Cơ chế Đăng ký Tài khoản',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.blueAccent,
@@ -273,8 +258,8 @@ class _RegisterViewState extends State<RegisterView> {
                                 ),
                                 SizedBox(height: 4),
                                 Text(
-                                  '• Email sinh viên (...@dau.edu.vn) dùng để nhận mã OTP xác minh là sinh viên trường.\n'
-                                  '• Email cá nhân (Gmail, Outlook...) là tài khoản chính thức dùng để ĐĂNG NHẬP.',
+                                  '• Nhập Email sinh viên (...@dau.edu.vn) hoặc Gmail của bạn.\n'
+                                  '• Mã OTP sẽ được gửi về Email này để xác thực và tạo tài khoản trực tiếp.',
                                   style: TextStyle(fontSize: 12, height: 1.4, color: Colors.white70),
                                 ),
                               ],
@@ -300,7 +285,7 @@ class _RegisterViewState extends State<RegisterView> {
                   ),
                   const SizedBox(height: 16),
 
-                  // 2. Email Sinh Viên (Nhận OTP) + Nút Lấy mã
+                  // 2. Email Sinh Viên / Gmail (Nhận OTP & Đăng nhập) + Nút Lấy mã
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -309,19 +294,19 @@ class _RegisterViewState extends State<RegisterView> {
                           controller: _studentEmailController,
                           keyboardType: TextInputType.emailAddress,
                           decoration: InputDecoration(
-                            labelText: 'Email sinh viên DAU',
-                            hintText: 'VD: 2011001@dau.edu.vn',
+                            labelText: 'Email sinh viên / Gmail',
+                            hintText: 'VD: 2011001@dau.edu.vn hoặc bạn@gmail.com',
                             prefixIcon: const Icon(Icons.school_outlined),
                             border: const OutlineInputBorder(),
-                            helperText: 'Bắt buộc có đuôi @dau.edu.vn (dùng nhận OTP)',
+                            helperText: 'Đuôi @dau.edu.vn hoặc @gmail.com (dùng nhận OTP & đăng nhập)',
                             helperStyle: TextStyle(fontSize: 11, color: Colors.grey.shade400),
                           ),
                           validator: (val) {
                             if (val == null || val.trim().isEmpty) {
-                              return 'Vui lòng nhập Email sinh viên';
+                              return 'Vui lòng nhập Email';
                             }
-                            if (!_isDauStudentEmail(val)) {
-                              return 'Email phải có đuôi @dau.edu.vn';
+                            if (!_isValidEmail(val)) {
+                              return 'Email phải có đuôi @dau.edu.vn hoặc @gmail.com';
                             }
                             return null;
                           },
@@ -362,12 +347,12 @@ class _RegisterViewState extends State<RegisterView> {
                     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     decoration: InputDecoration(
                       labelText: 'Mã xác thực OTP (6 chữ số)',
-                      hintText: 'Nhập mã 6 chữ số đã gửi về email SV',
+                      hintText: 'Nhập mã 6 chữ số đã gửi về email',
                       prefixIcon: const Icon(Icons.security),
                       border: const OutlineInputBorder(),
                       counterText: '',
                       helperText: _otpSent
-                          ? '✅ Đã gửi mã OTP đến ${_sentToStudentEmail ?? "email sinh viên"}'
+                          ? '✅ Đã gửi mã OTP đến ${_sentToStudentEmail ?? "email"}'
                           : null,
                       helperStyle: const TextStyle(color: Colors.green, fontWeight: FontWeight.w500),
                     ),
@@ -379,34 +364,7 @@ class _RegisterViewState extends State<RegisterView> {
                   ),
                   const SizedBox(height: 16),
 
-                  // 4. Email cá nhân (Dùng đăng nhập chính)
-                  TextFormField(
-                    controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      labelText: 'Email cá nhân (Gmail/Outlook dùng ĐĂNG NHẬP)',
-                      hintText: 'VD: ABC@gmail.com',
-                      prefixIcon: const Icon(Icons.email_outlined),
-                      border: const OutlineInputBorder(),
-                      helperText: 'Tài khoản chính thức để đăng nhập app & nhận tin',
-                      helperStyle: TextStyle(fontSize: 11, color: Colors.grey.shade400),
-                    ),
-                    validator: (val) {
-                      if (val == null || val.trim().isEmpty) return 'Vui lòng nhập Email cá nhân';
-                      final clean = val.trim().toLowerCase();
-                      if (!clean.contains('@') || !clean.contains('.')) return 'Email không hợp lệ';
-                      if (clean.endsWith('@dau.edu.vn')) {
-                        return 'Vui lòng dùng Gmail/Email cá nhân (không dùng @dau.edu.vn) để đăng nhập';
-                      }
-                      if (clean == _studentEmailController.text.trim().toLowerCase()) {
-                        return 'Email cá nhân không được trùng với Email sinh viên';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-
-                  // 5. Mật khẩu
+                  // 4. Mật khẩu
                   TextFormField(
                     controller: _passwordController,
                     obscureText: _obscurePassword,
@@ -430,7 +388,7 @@ class _RegisterViewState extends State<RegisterView> {
                   ),
                   const SizedBox(height: 16),
 
-                  // 6. Nhập lại Mật khẩu
+                  // 5. Nhập lại Mật khẩu
                   TextFormField(
                     controller: _confirmPasswordController,
                     obscureText: _obscureConfirmPassword,
