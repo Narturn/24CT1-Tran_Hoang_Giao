@@ -1,142 +1,131 @@
 <mxfile host="Electron" agent="Antigravity">
   <diagram id="page-documents" name="Sơ đồ tuần tự: Chia sẻ tài liệu">
-    <mxGraphModel dx="1710" dy="1043" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1039" dy="633" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1150" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;fontColor=#FFFFFF;fontSize=15;fontStyle=1;align=center;strokeColor=#334155;shadow=1;" value="&lt;b&gt;SƠ ĐỒ TUẦN TỰ: CHIA SẺ VÀ TRUY CẬP TÀI LIỆU (DOCUMENT SHARING)&lt;/b&gt;&lt;br/&gt;&lt;font style=&#39;font-size: 11px; font-weight: normal; color: #CCCCCC;&#39;&gt;Quy trình tải lên liên kết tài liệu, nhận thưởng điểm và người dùng khác truy cập tài liệu&lt;/font&gt;" vertex="1">
-          <mxGeometry height="55" width="1320" x="40" y="30" as="geometry" />
+        <mxCell id="2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;fontColor=#FFFFFF;fontSize=15;fontStyle=1;align=center;strokeColor=#334155;shadow=1;" value="&lt;b&gt;SƠ ĐỒ TUẦN TỰ: CHIA SẺ VÀ TẢI TÀI LIỆU&lt;/b&gt;&lt;br/&gt;&lt;font style=&#39;font-size: 11px; font-weight: normal; color: #CCCCCC;&#39;&gt;Mô tả các bước đăng đường dẫn chia sẻ tài liệu nhận điểm thưởng và khi người khác mở xem&lt;/font&gt;" vertex="1">
+          <mxGeometry height="55" width="1720" x="40" y="30" as="geometry" />
         </mxCell>
-        <mxCell id="3" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};participant=umlActor;size=60;fillColor=#EDE9FE;strokeColor=#8B5CF6;fontStyle=1;fontSize=12;fontColor=#4C1D95;" value="User A&lt;br/&gt;(Người chia sẻ)" vertex="1">
-          <mxGeometry height="920" width="110" x="40" y="110" as="geometry" />
+        <mxCell id="3" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};participant=umlActor;size=60;fillColor=#EDE9FE;strokeColor=#8B5CF6;fontStyle=1;fontSize=11;fontColor=#4C1D95;" value="Người chia sẻ&lt;br/&gt;(Sinh viên A)" vertex="1">
+          <mxGeometry height="970" width="110" x="40" y="110" as="geometry" />
         </mxCell>
-        <mxCell id="4" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=40;fillColor=#DBEAFE;strokeColor=#3B82F6;fontStyle=1;fontSize=12;fontColor=#1E3A8A;rounded=1;arcSize=10;" value="DocumentsView&lt;br/&gt;(Kho Tài Liệu)" vertex="1">
-          <mxGeometry height="920" width="150" x="230" y="110" as="geometry" />
+        <mxCell id="4" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=50;fillColor=#DBEAFE;strokeColor=#3B82F6;fontStyle=1;fontSize=11;fontColor=#1E3A8A;rounded=1;arcSize=10;" value="/home/narturn/code/24CT1-Tran_Hoang_Giao/&lt;br/&gt;lib/views/documents_view.dart" vertex="1">
+          <mxGeometry height="970" width="310" x="190" y="110" as="geometry" />
         </mxCell>
-        <mxCell id="5" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=40;fillColor=#DCFCE7;strokeColor=#22C55E;fontStyle=1;fontSize=12;fontColor=#14532D;rounded=1;arcSize=10;" value="DatabaseService&lt;br/&gt;(Nghiệp vụ dữ liệu)" vertex="1">
-          <mxGeometry height="920" width="160" x="470" y="110" as="geometry" />
+        <mxCell id="5" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=50;fillColor=#DCFCE7;strokeColor=#22C55E;fontStyle=1;fontSize=11;fontColor=#14532D;rounded=1;arcSize=10;" value="/home/narturn/code/24CT1-Tran_Hoang_Giao/&lt;br/&gt;lib/services/database_service.dart" vertex="1">
+          <mxGeometry height="970" width="310" x="540" y="110" as="geometry" />
         </mxCell>
-        <mxCell id="6" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=40;fillColor=#FEF3C7;strokeColor=#F59E0B;fontStyle=1;fontSize=12;fontColor=#78350F;rounded=1;arcSize=10;" value="Cloud Firestore&lt;br/&gt;(documents, users)" vertex="1">
-          <mxGeometry height="920" width="160" x="720" y="110" as="geometry" />
+        <mxCell id="6" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=50;fillColor=#FEF3C7;strokeColor=#F59E0B;fontStyle=1;fontSize=11;fontColor=#78350F;rounded=1;arcSize=10;" value="campusHub/CloudeFirestore/Database" vertex="1">
+          <mxGeometry height="970" width="220" x="890" y="110" as="geometry" />
         </mxCell>
-        <mxCell id="7" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};participant=umlActor;size=60;fillColor=#EDE9FE;strokeColor=#8B5CF6;fontStyle=1;fontSize=12;fontColor=#4C1D95;" value="User B&lt;br/&gt;(Người xem/tải)" vertex="1">
-          <mxGeometry height="920" width="110" x="980" y="110" as="geometry" />
+        <mxCell id="7" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};participant=umlActor;size=60;fillColor=#EDE9FE;strokeColor=#8B5CF6;fontStyle=1;fontSize=11;fontColor=#4C1D95;" value="Người xem / tải&lt;br/&gt;(Sinh viên B)" vertex="1">
+          <mxGeometry height="970" width="110" x="1150" y="110" as="geometry" />
         </mxCell>
-        <mxCell id="8" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=40;fillColor=#FEE2E2;strokeColor=#EF4444;fontStyle=1;fontSize=12;fontColor=#7F1D1D;rounded=1;arcSize=10;" value="UrlLauncher / Browser&lt;br/&gt;(Trình duyệt / Cloud)" vertex="1">
-          <mxGeometry height="920" width="160" x="1180" y="110" as="geometry" />
+        <mxCell id="8" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=50;fillColor=#FEE2E2;strokeColor=#EF4444;fontStyle=1;fontSize=11;fontColor=#7F1D1D;rounded=1;arcSize=10;" value="Trình duyệt Web&lt;br/&gt;(Google Drive, Dropbox,...)" vertex="1">
+          <mxGeometry height="970" width="230" x="1300" y="110" as="geometry" />
         </mxCell>
         <mxCell id="9" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="1: Bấm nút &#39;Chia sẻ link tài liệu&#39;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="95" y="182" as="sourcePoint" />
-            <mxPoint x="305" y="182" as="targetPoint" />
+            <mxPoint x="95" y="199" as="sourcePoint" />
+            <mxPoint x="345" y="199" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="10" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="2: Hiển thị Dialog: Nhập Tên tài liệu &amp; Đường link (Drive/Dropbox)">
+        <mxCell id="10" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="2: Hiện cửa sổ yêu cầu nhập Tên tài liệu và Đường dẫn (Link)">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="305" y="224" as="sourcePoint" />
-            <mxPoint x="95" y="224" as="targetPoint" />
+            <mxPoint x="345" y="243" as="sourcePoint" />
+            <mxPoint x="95" y="243" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="11" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="3: Điền tiêu đề, link tài liệu hợp lệ &amp; bấm &#39;Chia sẻ (+10 điểm)&#39;">
+        <mxCell id="11" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="3: Điền tên tài liệu, dán đường dẫn và bấm &#39;Chia sẻ&#39;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="95" y="266" as="sourcePoint" />
-            <mxPoint x="305" y="266" as="targetPoint" />
+            <mxPoint x="95" y="287" as="sourcePoint" />
+            <mxPoint x="345" y="287" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="12" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="4: getUser(uid) - Lấy thông tin người chia sẻ">
+        <mxCell id="12" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="4: Yêu cầu kiểm duyệt">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="305" y="308" as="sourcePoint" />
-            <mxPoint x="550" y="308" as="targetPoint" />
+            <mxPoint x="345" y="331" as="sourcePoint" />
+            <mxPoint x="695" y="331" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="13" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="5: get() doc: users/{uid}">
+        <mxCell id="15" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="7: Kiểm duyệt được thông qua">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="550" y="350" as="sourcePoint" />
-            <mxPoint x="800" y="350" as="targetPoint" />
+            <mxPoint as="offset" />
+            <mxPoint x="695" y="400" as="sourcePoint" />
+            <mxPoint x="345" y="400" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="14" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="6: Trả về thông tin User (name, uid)">
+        <mxCell id="16" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="8: Yêu cầu lưu tài liệu mới vào kho tài liệu chung">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="800" y="392" as="sourcePoint" />
-            <mxPoint x="550" y="392" as="targetPoint" />
+            <mxPoint x="345" y="460" as="sourcePoint" />
+            <mxPoint x="695" y="460" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="15" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="7: Trả về đối tượng UserModel">
+        <mxCell id="17" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="9: Lưu tên tài liệu, đường dẫn và tên người đăng vào danh sách tài liệu">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="550" y="434" as="sourcePoint" />
-            <mxPoint x="305" y="434" as="targetPoint" />
+            <mxPoint x="700" y="520" as="sourcePoint" />
+            <mxPoint x="1005" y="520" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="16" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="8: createDocument(DocumentModel(id, title, downloadUrl, ownerName,...))">
+        <mxCell id="19" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="11: Xác nhận đã lưu tài liệu thành công">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="305" y="476" as="sourcePoint" />
-            <mxPoint x="550" y="476" as="targetPoint" />
+            <mxPoint x="1000" y="594.5" as="sourcePoint" />
+            <mxPoint x="695" y="594.5" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="17" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="9: set() doc mới vào collection: documents/{docId}">
+        <mxCell id="20" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="12: Báo hoàn tất việc đăng tài liệu">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="550" y="518" as="sourcePoint" />
-            <mxPoint x="800" y="518" as="targetPoint" />
+            <mxPoint x="695" y="640" as="sourcePoint" />
+            <mxPoint x="345" y="640" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="19" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="10: Xác nhận lưu trữ tài liệu thành công">
+        <mxCell id="21" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="13: Hiện thông báo &#39;Chia sẻ tài liệu thành công&#39;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="800" y="602" as="sourcePoint" />
-            <mxPoint x="550" y="602" as="targetPoint" />
+            <mxPoint x="345" y="727" as="sourcePoint" />
+            <mxPoint x="95" y="727" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="20" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="11: Hoàn tất tạo tài liệu">
+        <mxCell id="22" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="14: Tải danh sách các tài liệu đang có trong kho chung">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="550" y="644" as="sourcePoint" />
-            <mxPoint x="305" y="644" as="targetPoint" />
+            <mxPoint x="345" y="771" as="sourcePoint" />
+            <mxPoint x="1000" y="771" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="21" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="12: Hiển thị SnackBar &#39;🎉 Chia sẻ tài liệu thành công&#39;">
+        <mxCell id="23" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="15: Trả về danh sách tài liệu (sắp xếp từ mới nhất đến cũ nhất)">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="305" y="686" as="sourcePoint" />
-            <mxPoint x="95" y="686" as="targetPoint" />
+            <mxPoint x="1000" y="815" as="sourcePoint" />
+            <mxPoint x="345" y="815" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="22" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="13: documentsStream() - Lắng nghe collection &#39;documents&#39; (orderBy createdAt desc)">
+        <mxCell id="24" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="16: Xem danh sách, chọn một tài liệu và bấm &#39;Mở liên kết / Tải về&#39;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="305" y="728" as="sourcePoint" />
-            <mxPoint x="800" y="728" as="targetPoint" />
+            <mxPoint x="1205" y="859" as="sourcePoint" />
+            <mxPoint x="345" y="859" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="23" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="14: Stream đẩy danh sách DocumentModel mới nhất về UI">
+        <mxCell id="25" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="17: Yêu cầu cộng thêm 1 vào số lượt tải của tài liệu đó">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="800" y="770" as="sourcePoint" />
-            <mxPoint x="305" y="770" as="targetPoint" />
+            <mxPoint x="345" y="903" as="sourcePoint" />
+            <mxPoint x="695" y="903" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="24" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="15: Duyệt danh sách và bấm nút &#39;Mở liên kết / Tải về&#39;">
+        <mxCell id="26" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="18: Tăng số lượt tải của tài liệu lên thêm 1 trong kho dữ liệu">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1035" y="812" as="sourcePoint" />
-            <mxPoint x="305" y="812" as="targetPoint" />
+            <mxPoint x="695" y="947" as="sourcePoint" />
+            <mxPoint x="1000" y="947" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="25" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="16: incrementDownloadCount(docId)">
+        <mxCell id="27" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="19: Mở đường dẫn tài liệu bằng trình duyệt web">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="305" y="854" as="sourcePoint" />
-            <mxPoint x="550" y="854" as="targetPoint" />
+            <mxPoint x="345" y="991" as="sourcePoint" />
+            <mxPoint x="1415" y="991" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="26" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="17: update() documents/{docId}: downloadCount = FieldValue.increment(1)">
+        <mxCell id="28" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="20: Mở trang lưu trữ (Google Drive, Dropbox,...) để sinh viên xem và tải về máy">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="550" y="896" as="sourcePoint" />
-            <mxPoint x="800" y="896" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="27" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="18: launchUrl(Uri.parse(document.downloadUrl))">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="305" y="938" as="sourcePoint" />
-            <mxPoint x="1260" y="938" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="28" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="19: Mở tab trình duyệt ngoài xem file Google Drive / OneDrive">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1260" y="980" as="sourcePoint" />
-            <mxPoint x="1035" y="980" as="targetPoint" />
+            <mxPoint x="1415" y="1035" as="sourcePoint" />
+            <mxPoint x="1205" y="1035" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>

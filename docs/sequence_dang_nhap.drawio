@@ -1,144 +1,215 @@
-<mxfile host="Electron" agent="Antigravity">
+<mxfile host="app.diagrams.net" agent="Antigravity" version="24.0.0">
   <diagram id="page-login" name="Sơ đồ tuần tự: Đăng nhập người dùng">
-    <mxGraphModel dx="1375" dy="838" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1350" pageHeight="1080" math="0" shadow="0">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2220" pageHeight="1611" math="0" shadow="0">
       <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
-        <mxCell id="14" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;fillColor=#F8FAFC;fontColor=#1E293B;strokeColor=#64748B;strokeWidth=1.5;width=65;height=22;dashed=1;fontSize=11;fontStyle=1;" value="alt [Thông tin đăng nhập hợp lệ (Success)]" vertex="1">
-          <mxGeometry height="563" width="830" x="480" y="417" as="geometry" />
-        </mxCell>
-        <mxCell id="2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;fontColor=#FFFFFF;fontSize=15;fontStyle=1;align=center;strokeColor=#334155;shadow=1;" value="&lt;b&gt;SƠ ĐỒ TUẦN TỰ: ĐĂNG NHẬP NGƯỜI DÙNG (USER LOGIN)&lt;/b&gt;&lt;br/&gt;&lt;font style=&#39;font-size: 11px; font-weight: normal; color: #CCCCCC;&#39;&gt;Quy trình xác thực tài khoản Firebase Auth và truy vấn hồ sơ Firestore&lt;/font&gt;" vertex="1">
-          <mxGeometry height="55" width="1270" x="40" y="30" as="geometry" />
-        </mxCell>
-        <mxCell id="3" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};participant=umlActor;size=60;fillColor=#EDE9FE;strokeColor=#8B5CF6;fontStyle=1;fontSize=12;fontColor=#4C1D95;" value="User&lt;br/&gt;(Người dùng)" vertex="1">
-          <mxGeometry height="880" width="110" x="50" y="110" as="geometry" />
-        </mxCell>
-        <mxCell id="4" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=40;fillColor=#DBEAFE;strokeColor=#3B82F6;fontStyle=1;fontSize=12;fontColor=#1E3A8A;rounded=1;arcSize=10;" value="LoginView&lt;br/&gt;(Giao diện Đăng nhập)" vertex="1">
-          <mxGeometry height="880" width="150" x="240" y="110" as="geometry" />
-        </mxCell>
-        <mxCell id="5" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=40;fillColor=#DCFCE7;strokeColor=#22C55E;fontStyle=1;fontSize=12;fontColor=#14532D;rounded=1;arcSize=10;" value="AuthService&lt;br/&gt;(Xác thực tài khoản)" vertex="1">
-          <mxGeometry height="870" width="150" x="470" y="110" as="geometry" />
-        </mxCell>
-        <mxCell id="6" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=40;fillColor=#FEE2E2;strokeColor=#EF4444;fontStyle=1;fontSize=12;fontColor=#7F1D1D;rounded=1;arcSize=10;" value="FirebaseAuth&lt;br/&gt;(Firebase Auth SDK)" vertex="1">
-          <mxGeometry height="870" width="150" x="700" y="110" as="geometry" />
-        </mxCell>
-        <mxCell id="7" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=40;fillColor=#DCFCE7;strokeColor=#22C55E;fontStyle=1;fontSize=12;fontColor=#14532D;rounded=1;arcSize=10;" value="DatabaseService&lt;br/&gt;(Dịch vụ dữ liệu)" vertex="1">
-          <mxGeometry height="870" width="150" x="930" y="110" as="geometry" />
-        </mxCell>
-        <mxCell id="8" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=40;fillColor=#FEF3C7;strokeColor=#F59E0B;fontStyle=1;fontSize=12;fontColor=#78350F;rounded=1;arcSize=10;" value="Cloud Firestore&lt;br/&gt;(users collection)" vertex="1">
-          <mxGeometry height="870" width="140" x="1160" y="110" as="geometry" />
-        </mxCell>
-        <mxCell id="9" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="1: Nhập email, password &amp; bấm nút &#39;Đăng nhập&#39;">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="105" y="182" as="sourcePoint" />
-            <mxPoint x="315" y="182" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="10" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.4;fontSize=11;fontColor=#111827;edgeStyle=orthogonalEdgeStyle;" value="2: Validate form: Kiểm tra email hợp lệ, mật khẩu không rỗng">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="351" y="226" />
-              <mxPoint x="351" y="250" />
-            </Array>
-            <mxPoint x="315" y="226" as="sourcePoint" />
-            <mxPoint x="315" y="250" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="11" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="3: signIn(email, password)">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="315" y="292" as="sourcePoint" />
-            <mxPoint x="545" y="292" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="12" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="4: signInWithEmailAndPassword(email, password)">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="545" y="334" as="sourcePoint" />
-            <mxPoint x="775" y="334" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="13" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.4;fontSize=11;fontColor=#111827;edgeStyle=orthogonalEdgeStyle;" value="5: Kiểm tra xác thực thông tin đăng nhập trong hệ thống">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="811" y="378" />
-              <mxPoint x="811" y="402" />
-            </Array>
-            <mxPoint x="775" y="378" as="sourcePoint" />
-            <mxPoint x="775" y="402" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="15" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="6a: Trả về UserCredential (chứa User &amp; uid)">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="775" y="469" as="sourcePoint" />
-            <mxPoint x="545" y="469" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="16" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="7a: Trả về UserCredential thành công">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="545" y="511" as="sourcePoint" />
-            <mxPoint x="315" y="511" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="17" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="8a: getUser(user.uid) - Lấy thông tin tài khoản">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="315" y="553" as="sourcePoint" />
-            <mxPoint x="1005" y="553" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="18" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="9a: get() document: users/{uid}">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1005" y="595" as="sourcePoint" />
-            <mxPoint x="1230" y="595" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="19" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="10a: Trả về DocumentSnapshot (role, points, ...)">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1230" y="637" as="sourcePoint" />
-            <mxPoint x="1005" y="637" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="20" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="11a: Trả về đối tượng UserModel">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="1005" y="679" as="sourcePoint" />
-            <mxPoint x="315" y="679" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="21" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.4;fontSize=11;fontColor=#111827;edgeStyle=orthogonalEdgeStyle;" value="12a: Điều hướng người dùng sang DashboardView">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="351" y="723" />
-              <mxPoint x="351" y="747" />
-            </Array>
-            <mxPoint x="315" y="723" as="sourcePoint" />
-            <mxPoint x="315" y="747" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="22" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="13a: Hiển thị giao diện chính ứng dụng">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="315" y="789" as="sourcePoint" />
-            <mxPoint x="105" y="789" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="23" parent="1" style="line;strokeWidth=1.2;dashed=1;labelPosition=center;verticalLabelPosition=top;align=left;verticalAlign=bottom;fontSize=11;fontStyle=2;strokeColor=#94A3B8;fontColor=#475569;" value="[Else: Đăng nhập thất bại (Sai email / mật khẩu / mạng lỗi)]" vertex="1">
-          <mxGeometry height="10" width="830" x="480" y="814" as="geometry" />
-        </mxCell>
-        <mxCell id="24" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="6b: Ném lỗi FirebaseAuthException (e.g. user-not-found / wrong-password)">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="775" y="871" as="sourcePoint" />
-            <mxPoint x="545" y="871" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="25" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="7b: Bắt và ném ngoại lệ thông báo lỗi tiếng Việt">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="545" y="913" as="sourcePoint" />
-            <mxPoint x="315" y="913" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="26" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="8b: Hiển thị SnackBar thông báo lỗi đăng nhập thất bại">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="315" y="955" as="sourcePoint" />
-            <mxPoint x="105" y="955" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+<mxCell id="14" value="Kiểm tra ô nhập [Nếu người dùng bỏ trống hoặc nhập sai quy định]" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;fillColor=#F8FAFC;fontColor=#1E293B;strokeColor=#64748B;strokeWidth=1.5;width=85;height=24;dashed=1;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+  <mxGeometry x="30" y="370" width="2120" height="1141" as="geometry"/>
+</mxCell>
+<mxCell id="21" value="Rẽ nhánh kết quả [Trường hợp 1: Đúng email và mật khẩu (Đăng nhập thành công)]" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;fillColor=#F8FAFC;fontColor=#1E293B;strokeColor=#64748B;strokeWidth=1.5;width=85;height=24;dashed=1;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+  <mxGeometry x="45" y="703" width="2090" height="783" as="geometry"/>
+</mxCell>
+<mxCell id="2" value="&lt;b>SƠ ĐỒ TUẦN TỰ: ĐĂNG NHẬP NGƯỜI DÙNG&lt;/b>&lt;br/>&lt;font style='font-size: 11px; font-weight: normal; color: #CCCCCC;'>Mô tả chi tiết từ lúc người dùng mở màn hình đăng nhập, kiểm tra tài khoản đến khi tải dữ liệu Trang chủ&lt;/font>" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;fontColor=#FFFFFF;fontSize=15;fontStyle=1;align=center;strokeColor=#334155;shadow=1;" vertex="1" parent="1">
+  <mxGeometry x="40" y="30" width="2140" height="55" as="geometry"/>
+</mxCell>
+<mxCell id="3" value="Người dùng&lt;br/&gt;(Sinh viên / Admin)" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};participant=umlActor;size=60;fillColor=#EDE9FE;strokeColor=#8B5CF6;fontStyle=1;fontSize=11;fontColor=#4C1D95;" vertex="1" parent="1">
+  <mxGeometry x="40" y="110" width="110" height="1451" as="geometry"/>
+</mxCell>
+<mxCell id="4" value="/home/narturn/code/24CT1-Tran_Hoang_Giao/lib/views/login_view.dart" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=50;fillColor=#DBEAFE;strokeColor=#3B82F6;fontStyle=1;fontSize=11;fontColor=#1E3A8A;rounded=1;arcSize=10;" vertex="1" parent="1">
+  <mxGeometry x="180" y="110" width="330" height="1451" as="geometry"/>
+</mxCell>
+<mxCell id="5" value="/home/narturn/code/24CT1-Tran_Hoang_Giao/lib/services/auth_service.dart" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=50;fillColor=#DCFCE7;strokeColor=#22C55E;fontStyle=1;fontSize=11;fontColor=#14532D;rounded=1;arcSize=10;" vertex="1" parent="1">
+  <mxGeometry x="550" y="110" width="330" height="1451" as="geometry"/>
+</mxCell>
+<mxCell id="6" value="Hệ thống tài khoản (Firebase Auth)" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=50;fillColor=#FEE2E2;strokeColor=#EF4444;fontStyle=1;fontSize=11;fontColor=#7F1D1D;rounded=1;arcSize=10;" vertex="1" parent="1">
+  <mxGeometry x="920" y="110" width="200" height="1451" as="geometry"/>
+</mxCell>
+<mxCell id="7" value="/home/narturn/code/24CT1-Tran_Hoang_Giao/lib/services/database_service.dart" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=50;fillColor=#DCFCE7;strokeColor=#22C55E;fontStyle=1;fontSize=11;fontColor=#14532D;rounded=1;arcSize=10;" vertex="1" parent="1">
+  <mxGeometry x="1160" y="110" width="330" height="1451" as="geometry"/>
+</mxCell>
+<mxCell id="8" value="Cơ sở dữ liệu (Firestore)" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=50;fillColor=#FEF3C7;strokeColor=#F59E0B;fontStyle=1;fontSize=11;fontColor=#78350F;rounded=1;arcSize=10;" vertex="1" parent="1">
+  <mxGeometry x="1530" y="110" width="200" height="1451" as="geometry"/>
+</mxCell>
+<mxCell id="9" value="/home/narturn/code/24CT1-Tran_Hoang_Giao/lib/views/dashboard_view.dart" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=50;fillColor=#DBEAFE;strokeColor=#3B82F6;fontStyle=1;fontSize=11;fontColor=#1E3A8A;rounded=1;arcSize=10;" vertex="1" parent="1">
+  <mxGeometry x="1770" y="110" width="330" height="1451" as="geometry"/>
+</mxCell>
+<mxCell id="10" value="1: Mở ứng dụng, xem màn hình đăng nhập" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" edge="1" parent="1">
+  <mxGeometry relative="1" as="geometry">
+    <mxPoint x="95.0" y="199" as="sourcePoint"/>
+    <mxPoint x="345.0" y="199" as="targetPoint"/>
+  </mxGeometry>
+</mxCell>
+<mxCell id="11" value="2: Hiển thị ô nhập Email, Mật khẩu (có nút ẩn/hiện mật khẩu) và nút Đăng ký" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" edge="1" parent="1">
+  <mxGeometry relative="1" as="geometry">
+    <mxPoint x="345.0" y="243" as="sourcePoint"/>
+    <mxPoint x="95.0" y="243" as="targetPoint"/>
+  </mxGeometry>
+</mxCell>
+<mxCell id="12" value="3: Điền email, mật khẩu và bấm nút &#x27;ĐĂNG NHẬP NGAY&#x27;" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" edge="1" parent="1">
+  <mxGeometry relative="1" as="geometry">
+    <mxPoint x="95.0" y="287" as="sourcePoint"/>
+    <mxPoint x="345.0" y="287" as="targetPoint"/>
+  </mxGeometry>
+</mxCell>
+<mxCell id="13" value="4: Kiểm tra tại chỗ: Email có chứa ký tự &#x27;@&#x27; không, mật khẩu có đủ từ 6 ký tự trở lên không" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.4;fontSize=11;fontColor=#111827;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
+  <mxGeometry relative="1" as="geometry">
+    <mxPoint x="345.0" y="331" as="sourcePoint"/>
+    <mxPoint x="345.0" y="355" as="targetPoint"/>
+    <Array as="points">
+      <mxPoint x="385.0" y="331"/>
+      <mxPoint x="385.0" y="355"/>
+    </Array>
+  </mxGeometry>
+</mxCell>
+<mxCell id="15" value="5a: Hiện dòng chữ đỏ ngay dưới ô nhập nhắc điền lại cho đúng" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" edge="1" parent="1">
+  <mxGeometry relative="1" as="geometry">
+    <mxPoint x="345.0" y="424" as="sourcePoint"/>
+    <mxPoint x="95.0" y="424" as="targetPoint"/>
+  </mxGeometry>
+</mxCell>
+<mxCell id="16" value="[Nếu đã điền hợp lệ -&gt; Tiến hành kiểm tra tài khoản trên hệ thống]" style="line;strokeWidth=1.2;dashed=1;labelPosition=center;verticalLabelPosition=top;align=left;verticalAlign=bottom;fontSize=11;fontStyle=2;strokeColor=#94A3B8;fontColor=#475569;" vertex="1" parent="1">
+  <mxGeometry x="30" y="449" width="2120" height="10" as="geometry"/>
+</mxCell>
+<mxCell id="17" value="5b: Bật vòng xoay đang tải và khóa nút bấm để tránh bấm nhiều lần" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.4;fontSize=11;fontColor=#111827;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
+  <mxGeometry relative="1" as="geometry">
+    <mxPoint x="345.0" y="508" as="sourcePoint"/>
+    <mxPoint x="345.0" y="532" as="targetPoint"/>
+    <Array as="points">
+      <mxPoint x="385.0" y="508"/>
+      <mxPoint x="385.0" y="532"/>
+    </Array>
+  </mxGeometry>
+</mxCell>
+<mxCell id="18" value="6: Gửi yêu cầu đăng nhập kèm theo email và mật khẩu" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" edge="1" parent="1">
+  <mxGeometry relative="1" as="geometry">
+    <mxPoint x="345.0" y="576" as="sourcePoint"/>
+    <mxPoint x="715.0" y="576" as="targetPoint"/>
+  </mxGeometry>
+</mxCell>
+<mxCell id="19" value="7: Nhờ hệ thống kiểm tra email và mật khẩu" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" edge="1" parent="1">
+  <mxGeometry relative="1" as="geometry">
+    <mxPoint x="715.0" y="620" as="sourcePoint"/>
+    <mxPoint x="1020.0" y="620" as="targetPoint"/>
+  </mxGeometry>
+</mxCell>
+<mxCell id="20" value="8: Đối chiếu với danh sách tài khoản đã đăng ký trong hệ thống" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.4;fontSize=11;fontColor=#111827;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
+  <mxGeometry relative="1" as="geometry">
+    <mxPoint x="1020.0" y="664" as="sourcePoint"/>
+    <mxPoint x="1020.0" y="688" as="targetPoint"/>
+    <Array as="points">
+      <mxPoint x="1060.0" y="664"/>
+      <mxPoint x="1060.0" y="688"/>
+    </Array>
+  </mxGeometry>
+</mxCell>
+<mxCell id="22" value="9a: Xác nhận đúng tài khoản, trả về mã định danh người dùng" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" edge="1" parent="1">
+  <mxGeometry relative="1" as="geometry">
+    <mxPoint x="1020.0" y="757" as="sourcePoint"/>
+    <mxPoint x="715.0" y="757" as="targetPoint"/>
+  </mxGeometry>
+</mxCell>
+<mxCell id="23" value="10a: Báo đăng nhập thành công" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" edge="1" parent="1">
+  <mxGeometry relative="1" as="geometry">
+    <mxPoint x="715.0" y="801" as="sourcePoint"/>
+    <mxPoint x="345.0" y="801" as="targetPoint"/>
+  </mxGeometry>
+</mxCell>
+<mxCell id="24" value="11a: Tự động chuyển người dùng sang giao diện Trang chủ" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" edge="1" parent="1">
+  <mxGeometry relative="1" as="geometry">
+    <mxPoint x="345.0" y="845" as="sourcePoint"/>
+    <mxPoint x="1935.0" y="845" as="targetPoint"/>
+  </mxGeometry>
+</mxCell>
+<mxCell id="25" value="12a: Yêu cầu lấy thông tin cá nhân của người dùng đang đăng nhập" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" edge="1" parent="1">
+  <mxGeometry relative="1" as="geometry">
+    <mxPoint x="1935.0" y="889" as="sourcePoint"/>
+    <mxPoint x="1325.0" y="889" as="targetPoint"/>
+  </mxGeometry>
+</mxCell>
+<mxCell id="26" value="13a: Tìm hồ sơ người dùng trong kho dữ liệu (bảng users)" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" edge="1" parent="1">
+  <mxGeometry relative="1" as="geometry">
+    <mxPoint x="1325.0" y="933" as="sourcePoint"/>
+    <mxPoint x="1630.0" y="933" as="targetPoint"/>
+  </mxGeometry>
+</mxCell>
+<mxCell id="27" value="14a: Trả về họ tên, mã sinh viên, điểm thưởng, đồ trang trí và quyền hạn (Admin / Sinh viên)" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" edge="1" parent="1">
+  <mxGeometry relative="1" as="geometry">
+    <mxPoint x="1630.0" y="977" as="sourcePoint"/>
+    <mxPoint x="1325.0" y="977" as="targetPoint"/>
+  </mxGeometry>
+</mxCell>
+<mxCell id="28" value="15a: Gửi thông tin cá nhân về Trang chủ" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" edge="1" parent="1">
+  <mxGeometry relative="1" as="geometry">
+    <mxPoint x="1325.0" y="1021" as="sourcePoint"/>
+    <mxPoint x="1935.0" y="1021" as="targetPoint"/>
+  </mxGeometry>
+</mxCell>
+<mxCell id="29" value="16a: Đếm nhanh số liệu thống kê (Số Admin, Sinh viên, Bài viết, Tài liệu, Đánh giá)" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" edge="1" parent="1">
+  <mxGeometry relative="1" as="geometry">
+    <mxPoint x="1935.0" y="1065" as="sourcePoint"/>
+    <mxPoint x="1630.0" y="1065" as="targetPoint"/>
+  </mxGeometry>
+</mxCell>
+<mxCell id="30" value="17a: Trả về các con số thống kê mới nhất" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" edge="1" parent="1">
+  <mxGeometry relative="1" as="geometry">
+    <mxPoint x="1630.0" y="1109" as="sourcePoint"/>
+    <mxPoint x="1935.0" y="1109" as="targetPoint"/>
+  </mxGeometry>
+</mxCell>
+<mxCell id="31" value="18a: Kiểm tra nếu là Admin thì hiện thêm mục &#x27;Quản trị Admin&#x27; trên thanh menu" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.4;fontSize=11;fontColor=#111827;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
+  <mxGeometry relative="1" as="geometry">
+    <mxPoint x="1935.0" y="1153" as="sourcePoint"/>
+    <mxPoint x="1935.0" y="1177" as="targetPoint"/>
+    <Array as="points">
+      <mxPoint x="1975.0" y="1153"/>
+      <mxPoint x="1975.0" y="1177"/>
+    </Array>
+  </mxGeometry>
+</mxCell>
+<mxCell id="32" value="19a: Hiển thị Trang chủ hoàn chỉnh kèm số điểm, thống kê và danh bạ bạn bè" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" edge="1" parent="1">
+  <mxGeometry relative="1" as="geometry">
+    <mxPoint x="1935.0" y="1221" as="sourcePoint"/>
+    <mxPoint x="95.0" y="1221" as="targetPoint"/>
+  </mxGeometry>
+</mxCell>
+<mxCell id="33" value="[Trường hợp 2: Sai mật khẩu, tài khoản không tồn tại hoặc nhập sai quá nhiều lần]" style="line;strokeWidth=1.2;dashed=1;labelPosition=center;verticalLabelPosition=top;align=left;verticalAlign=bottom;fontSize=11;fontStyle=2;strokeColor=#94A3B8;fontColor=#475569;" vertex="1" parent="1">
+  <mxGeometry x="45" y="1246" width="2090" height="10" as="geometry"/>
+</mxCell>
+<mxCell id="34" value="9b: Báo lỗi (sai mật khẩu / không tìm thấy email / bị tạm khóa do thử quá nhiều lần)" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" edge="1" parent="1">
+  <mxGeometry relative="1" as="geometry">
+    <mxPoint x="1020.0" y="1305" as="sourcePoint"/>
+    <mxPoint x="715.0" y="1305" as="targetPoint"/>
+  </mxGeometry>
+</mxCell>
+<mxCell id="35" value="10b: Chuyển mã lỗi về màn hình đăng nhập" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" edge="1" parent="1">
+  <mxGeometry relative="1" as="geometry">
+    <mxPoint x="715.0" y="1349" as="sourcePoint"/>
+    <mxPoint x="345.0" y="1349" as="targetPoint"/>
+  </mxGeometry>
+</mxCell>
+<mxCell id="36" value="11b: Tắt vòng xoay đang tải và dịch mã lỗi sang tiếng Việt dễ hiểu" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.4;fontSize=11;fontColor=#111827;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1">
+  <mxGeometry relative="1" as="geometry">
+    <mxPoint x="345.0" y="1393" as="sourcePoint"/>
+    <mxPoint x="345.0" y="1417" as="targetPoint"/>
+    <Array as="points">
+      <mxPoint x="385.0" y="1393"/>
+      <mxPoint x="385.0" y="1417"/>
+    </Array>
+  </mxGeometry>
+</mxCell>
+<mxCell id="37" value="12b: Hiện hộp thông báo màu đỏ: &#x27;Email hoặc mật khẩu không đúng&#x27;" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" edge="1" parent="1">
+  <mxGeometry relative="1" as="geometry">
+    <mxPoint x="345.0" y="1461" as="sourcePoint"/>
+    <mxPoint x="95.0" y="1461" as="targetPoint"/>
+  </mxGeometry>
+</mxCell>
+<mxCell id="38" value="💡 Ghi chú Giao diện:&lt;br/&gt;• Có nút con mắt để Ẩn / Hiện mật khẩu.&lt;br/&gt;• Nếu chưa có tài khoản có thể bấm chuyển sang màn hình Đăng ký." style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#FEF9C3;strokeColor=#EAB308;fontColor=#713F12;fontSize=11;size=14;shadow=1;align=left;spacingLeft=8;" vertex="1" parent="1">
+  <mxGeometry x="1520" y="195" width="360" height="70" as="geometry"/>
+</mxCell>
+<mxCell id="39" value="🔒 Bảo mật:&lt;br/&gt;• Tự động cắt khoảng trắng thừa ở hai đầu email.&lt;br/&gt;• Nếu nhập sai liên tục hệ thống sẽ tạm khóa ít phút." style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#FEF9C3;strokeColor=#EAB308;fontColor=#713F12;fontSize=11;size=14;shadow=1;align=left;spacingLeft=8;" vertex="1" parent="1">
+  <mxGeometry x="1520" y="390" width="360" height="65" as="geometry"/>
+</mxCell>
       </root>
     </mxGraphModel>
   </diagram>
