@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../models/user_model.dart';
 import '../services/auth_service.dart';
@@ -9,6 +10,25 @@ import 'forum_view.dart';
 import 'profile_view.dart';
 import 'reviews_view.dart';
 import 'store_view.dart';
+
+/// Model lưu trữ số liệu thống kê đếm gộp từ Firestore Server
+class DashboardStats {
+  final int adminCount;
+  final int userCount;
+  final int postsCount;
+  final int documentsCount;
+  final int reviewsCount;
+
+  const DashboardStats({
+    this.adminCount = 0,
+    this.userCount = 0,
+    this.postsCount = 0,
+    this.documentsCount = 0,
+    this.reviewsCount = 0,
+  });
+
+  int get totalUsers => adminCount + userCount;
+}
 
 class DashboardView extends StatefulWidget {
   const DashboardView({super.key});
@@ -22,6 +42,63 @@ class _DashboardViewState extends State<DashboardView> {
   final _db = DatabaseService();
   UserModel? _activeChatFriend;
   String _friendSearchQuery = '';
+
+  DashboardStats? _stats;
+  bool _isLoadingStats = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDashboardStats();
+  }
+
+  /// Hàm đếm gộp số liệu máy chủ bằng Promise.all (Future.wait trong Flutter/Dart)
+  /// Sử dụng count().get(source: AggregateSource.server) tương đương getCountFromServer
+  Future<DashboardStats> getCountFromServer() async {
+    final firestore = FirebaseFirestore.instance;
+
+    // Chạy song song tất cả các tác vụ đếm gộp (Promise.all)
+    final results = await Future.wait([
+      // 1. Đếm số admin: từ collection users lọc theo role == 'admin'
+      firestore.collection('users').where('role', isEqualTo: 'admin').count().get(source: AggregateSource.server),
+      // 2. Đếm số user thường: từ collection users lọc theo role == 'user'
+      firestore.collection('users').where('role', isEqualTo: 'user').count().get(source: AggregateSource.server),
+      // 3. Đếm số bài viết
+      firestore.collection('posts').count().get(source: AggregateSource.server),
+      // 4. Đếm lượt chia sẻ (tài liệu)
+      firestore.collection('documents').count().get(source: AggregateSource.server),
+      // 5. Đếm số đánh giá
+      firestore.collection('reviews').count().get(source: AggregateSource.server),
+    ]);
+
+    return DashboardStats(
+      adminCount: results[0].count ?? 0,
+      userCount: results[1].count ?? 0,
+      postsCount: results[2].count ?? 0,
+      documentsCount: results[3].count ?? 0,
+      reviewsCount: results[4].count ?? 0,
+    );
+  }
+
+  /// Gọi hàm đếm và cập nhật trạng thái UI
+  Future<void> _loadDashboardStats() async {
+    if (!mounted) return;
+    setState(() => _isLoadingStats = true);
+    try {
+      final stats = await getCountFromServer();
+      if (mounted) {
+        setState(() {
+          _stats = stats;
+          _isLoadingStats = false;
+        });
+      }
+    } catch (e) {
+      debugPrint('Lỗi khi đếm thống kê server (getCountFromServer): $e');
+      if (mounted) {
+        setState(() => _isLoadingStats = false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,6 +193,18 @@ class _DashboardViewState extends State<DashboardView> {
                         ),
                       ),
                   ],
+                  // Nút xem thống kê hệ thống máy chủ (getCountFromServer)
+                  IconButton(
+                    icon: _isLoadingStats
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.blueAccent),
+                          )
+                        : const Icon(Icons.analytics_outlined, color: Colors.blueAccent),
+                    tooltip: 'Thống kê hệ thống',
+                    onPressed: () => _showStatsDialog(context),
+                  ),
                   if (!isDesktop)
                     IconButton(
                       icon: const Icon(Icons.people_alt_outlined),
@@ -251,6 +340,7 @@ class _DashboardViewState extends State<DashboardView> {
                   activeIcon: Icons.forum,
                   label: 'Sảnh chém gió',
                   isTablet: isTablet,
+                  badgeText: _stats != null ? '${_stats!.postsCount}' : null,
                 ),
                 _buildNavItem(
                   index: 1,
@@ -258,6 +348,7 @@ class _DashboardViewState extends State<DashboardView> {
                   activeIcon: Icons.folder_shared,
                   label: 'Kho tài liệu',
                   isTablet: isTablet,
+                  badgeText: _stats != null ? '${_stats!.documentsCount}' : null,
                 ),
                 _buildNavItem(
                   index: 2,
@@ -265,6 +356,7 @@ class _DashboardViewState extends State<DashboardView> {
                   activeIcon: Icons.rate_review,
                   label: 'Trạm review',
                   isTablet: isTablet,
+                  badgeText: _stats != null ? '${_stats!.reviewsCount}' : null,
                 ),
                 _buildNavItem(
                   index: 3,
@@ -292,7 +384,12 @@ class _DashboardViewState extends State<DashboardView> {
                     label: 'Quản trị Admin',
                     isTablet: isTablet,
                     isSpecial: true,
+                    badgeText: _stats != null ? '${_stats!.adminCount}' : null,
                   ),
+                ],
+                if (!isTablet) ...[
+                  const SizedBox(height: 8),
+                  _buildSidebarStatsCard(),
                 ],
               ],
             ),
@@ -338,6 +435,7 @@ class _DashboardViewState extends State<DashboardView> {
     required String label,
     required bool isTablet,
     bool isSpecial = false,
+    String? badgeText,
   }) {
     final isSelected = _selectedIndex == index;
     final color = isSpecial
@@ -366,7 +464,283 @@ class _DashboardViewState extends State<DashboardView> {
                   fontSize: 13.5,
                 ),
               ),
+        trailing: (badgeText != null && !isTablet)
+            ? Container(
+                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                decoration: BoxDecoration(
+                  color: isSpecial
+                      ? Colors.redAccent.withValues(alpha: 0.2)
+                      : (isSelected ? Colors.blueAccent.withValues(alpha: 0.25) : Colors.white.withValues(alpha: 0.08)),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: isSpecial
+                        ? Colors.redAccent.withValues(alpha: 0.4)
+                        : (isSelected ? Colors.blueAccent.withValues(alpha: 0.5) : Colors.grey.shade700),
+                    width: 0.6,
+                  ),
+                ),
+                child: Text(
+                  badgeText,
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: isSpecial ? Colors.redAccent : (isSelected ? Colors.blueAccent : Colors.grey.shade400),
+                  ),
+                ),
+              )
+            : null,
         onTap: () => setState(() => _selectedIndex = index),
+      ),
+    );
+  }
+
+  /// Khung hiển thị số liệu thống kê nhanh trên thanh điều hướng cột trái
+  Widget _buildSidebarStatsCard() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0F172A),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade800, width: 0.6),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.analytics_outlined, size: 16, color: Colors.blueAccent),
+              const SizedBox(width: 6),
+              const Expanded(
+                child: Text(
+                  'Thống kê hệ thống',
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+              ),
+              InkWell(
+                onTap: _isLoadingStats ? null : _loadDashboardStats,
+                borderRadius: BorderRadius.circular(12),
+                child: Padding(
+                  padding: const EdgeInsets.all(2),
+                  child: _isLoadingStats
+                      ? const SizedBox(
+                          width: 12,
+                          height: 12,
+                          child: CircularProgressIndicator(strokeWidth: 1.5, color: Colors.blueAccent),
+                        )
+                      : const Tooltip(
+                          message: 'Làm mới số liệu (Server count)',
+                          child: Icon(Icons.refresh, size: 14, color: Colors.grey),
+                        ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          _buildStatRow(Icons.shield, 'Quản trị viên (Admin):', _stats?.adminCount, Colors.redAccent),
+          const SizedBox(height: 6),
+          _buildStatRow(Icons.person, 'Sinh viên (Users):', _stats?.userCount, Colors.blueAccent),
+          const SizedBox(height: 6),
+          _buildStatRow(Icons.forum, 'Bài viết:', _stats?.postsCount, Colors.purpleAccent),
+          const SizedBox(height: 6),
+          _buildStatRow(Icons.folder_shared, 'Tài liệu chia sẻ:', _stats?.documentsCount, Colors.amber),
+          const SizedBox(height: 6),
+          _buildStatRow(Icons.star, 'Lượt đánh giá:', _stats?.reviewsCount, Colors.greenAccent),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatRow(IconData icon, String label, int? count, Color color) {
+    return Row(
+      children: [
+        Icon(icon, size: 13, color: color),
+        const SizedBox(width: 6),
+        Expanded(
+          child: Text(
+            label,
+            style: TextStyle(fontSize: 11, color: Colors.grey.shade400),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1.5),
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: Text(
+            count != null ? '$count' : '...',
+            style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: color),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Hộp thoại hiển thị chi tiết số liệu thống kê đếm gộp Firestore (getCountFromServer)
+  void _showStatsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialogState) => AlertDialog(
+          backgroundColor: const Color(0xFF1E293B),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.blueAccent.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.bar_chart_rounded, color: Colors.blueAccent, size: 24),
+              ),
+              const SizedBox(width: 12),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Thống Kê Hệ Thống',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                    Text(
+                      'Đếm gộp máy chủ Firestore (getCountFromServer)',
+                      style: TextStyle(fontSize: 11, color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
+              IconButton(
+                icon: _isLoadingStats
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.blueAccent),
+                      )
+                    : const Icon(Icons.refresh, size: 20),
+                tooltip: 'Cập nhật lại số liệu',
+                onPressed: _isLoadingStats
+                    ? null
+                    : () async {
+                        setDialogState(() {});
+                        await _loadDashboardStats();
+                        setDialogState(() {});
+                      },
+              ),
+            ],
+          ),
+          content: SizedBox(
+            width: 440,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildDialogStatCard(
+                  icon: Icons.shield,
+                  title: 'Quản trị viên (Admin)',
+                  subtitle: "collection('users').where('role', == 'admin')",
+                  value: _stats?.adminCount,
+                  color: Colors.redAccent,
+                ),
+                const SizedBox(height: 8),
+                _buildDialogStatCard(
+                  icon: Icons.people_alt,
+                  title: 'Người dùng thường (Sinh viên)',
+                  subtitle: "collection('users').where('role', == 'user')",
+                  value: _stats?.userCount,
+                  color: Colors.blueAccent,
+                ),
+                const SizedBox(height: 8),
+                _buildDialogStatCard(
+                  icon: Icons.forum_rounded,
+                  title: 'Tổng số bài viết',
+                  subtitle: "collection('posts').count()",
+                  value: _stats?.postsCount,
+                  color: Colors.purpleAccent,
+                ),
+                const SizedBox(height: 8),
+                _buildDialogStatCard(
+                  icon: Icons.folder_shared_rounded,
+                  title: 'Tài liệu chia sẻ',
+                  subtitle: "collection('documents').count()",
+                  value: _stats?.documentsCount,
+                  color: Colors.amber,
+                ),
+                const SizedBox(height: 8),
+                _buildDialogStatCard(
+                  icon: Icons.rate_review_rounded,
+                  title: 'Lượt đánh giá',
+                  subtitle: "collection('reviews').count()",
+                  value: _stats?.reviewsCount,
+                  color: Colors.greenAccent,
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Đóng'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDialogStatCard({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required int? value,
+    required Color color,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0F172A),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 0.8),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(icon, color: color, size: 20),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.white),
+                ),
+                Text(
+                  subtitle,
+                  style: TextStyle(fontSize: 10, color: Colors.grey.shade500),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              value != null ? '$value' : '...',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: color),
+            ),
+          ),
+        ],
       ),
     );
   }

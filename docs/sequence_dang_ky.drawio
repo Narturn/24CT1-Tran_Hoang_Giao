@@ -1,0 +1,219 @@
+<mxfile host="Electron" agent="Antigravity">
+  <diagram id="page-register" name="Sơ đồ tuần tự: Đăng ký người dùng">
+    <mxGraphModel dx="3910" dy="1500" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1450" pageHeight="1594" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="26" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;fillColor=#F8FAFC;fontColor=#1E293B;strokeColor=#64748B;strokeWidth=1.5;width=65;height=22;dashed=1;fontSize=11;fontStyle=1;" value="alt&amp;nbsp;" vertex="1">
+          <mxGeometry height="521" width="940" x="480" y="973" as="geometry" />
+        </mxCell>
+        <mxCell id="2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1E293B;fontColor=#FFFFFF;fontSize=15;fontStyle=1;align=center;strokeColor=#334155;shadow=1;" value="&lt;b&gt;SƠ ĐỒ TUẦN TỰ: ĐĂNG KÝ NGƯỜI DÙNG (USER REGISTRATION)&lt;/b&gt;&lt;br/&gt;&lt;font style=&#39;font-size: 11px; font-weight: normal; color: #CCCCCC;&#39;&gt;Quy trình xác minh OTP Email sinh viên, tạo tài khoản Firebase Auth &amp; khởi tạo hồ sơ Firestore&lt;/font&gt;" vertex="1">
+          <mxGeometry height="55" width="1370" x="40" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};participant=umlActor;size=60;fillColor=#EDE9FE;strokeColor=#8B5CF6;fontStyle=1;fontSize=12;fontColor=#4C1D95;" value="Sinh viên&lt;br/&gt;(Người dùng mới)" vertex="1">
+          <mxGeometry height="1384" width="110" x="40" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="4" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=40;fillColor=#DBEAFE;strokeColor=#3B82F6;fontStyle=1;fontSize=12;fontColor=#1E3A8A;rounded=1;arcSize=10;" value="RegisterView&lt;br/&gt;(Giao diện Đăng ký)" vertex="1">
+          <mxGeometry height="1384" width="150" x="230" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="5" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=40;fillColor=#DCFCE7;strokeColor=#22C55E;fontStyle=1;fontSize=12;fontColor=#14532D;rounded=1;arcSize=10;" value="AuthService&lt;br/&gt;(Nghiệp vụ xác thực &amp; OTP)" vertex="1">
+          <mxGeometry height="1384" width="170" x="460" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="6" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=40;fillColor=#FEE2E2;strokeColor=#EF4444;fontStyle=1;fontSize=12;fontColor=#7F1D1D;rounded=1;arcSize=10;" value="EmailService / EmailJS&lt;br/&gt;(Cổng gửi email SMTP)" vertex="1">
+          <mxGeometry height="1384" width="160" x="710" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="7" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=40;fillColor=#FEF3C7;strokeColor=#F59E0B;fontStyle=1;fontSize=12;fontColor=#78350F;rounded=1;arcSize=10;" value="Cloud Firestore&lt;br/&gt;(users &amp; otp_requests)" vertex="1">
+          <mxGeometry height="1384" width="160" x="950" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="8" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=40;fillColor=#FEE2E2;strokeColor=#EF4444;fontStyle=1;fontSize=12;fontColor=#7F1D1D;rounded=1;arcSize=10;" value="FirebaseAuth&lt;br/&gt;(Firebase Auth SDK)" vertex="1">
+          <mxGeometry height="1384" width="150" x="1200" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="9" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="1: Nhập Họ tên, Email (@dau.edu.vn/@gmail.com), MSV, Trường, Mật khẩu &amp; bấm &#39;Lấy OTP&#39;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="95" y="182" as="sourcePoint" />
+            <mxPoint x="305" y="182" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="10" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="2: sendStudentVerificationOTP(studentEmail, name)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="305" y="224" as="sourcePoint" />
+            <mxPoint x="545" y="224" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="11" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.4;fontSize=11;fontColor=#111827;edgeStyle=orthogonalEdgeStyle;" value="3: Kiểm tra Regex định dạng email (@dau.edu.vn hoặc @gmail.com)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="581" y="268" />
+              <mxPoint x="581" y="292" />
+            </Array>
+            <mxPoint x="545" y="268" as="sourcePoint" />
+            <mxPoint x="545" y="292" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="12" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="4: Truy vấn users collection tìm email đã tồn tại?">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="545" y="334" as="sourcePoint" />
+            <mxPoint x="1030" y="334" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="13" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="5: Trả về kết quả (email chưa tồn tại)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1030" y="376" as="sourcePoint" />
+            <mxPoint x="545" y="376" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="14" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.4;fontSize=11;fontColor=#111827;edgeStyle=orthogonalEdgeStyle;" value="6: Sinh mã OTP ngẫu nhiên 6 số &amp; đặt hạn 5 phút (expiresAt)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="581" y="420" />
+              <mxPoint x="581" y="444" />
+            </Array>
+            <mxPoint x="545" y="420" as="sourcePoint" />
+            <mxPoint x="545" y="444" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="15" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="7: Lưu doc: otp_requests/{cleanEmail} (otp, expiresAt)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="545" y="486" as="sourcePoint" />
+            <mxPoint x="1030" y="486" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="16" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="8: sendStudentOtp(studentEmail, otp, name)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="545" y="528" as="sourcePoint" />
+            <mxPoint x="790" y="528" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="17" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.4;fontSize=11;fontColor=#111827;edgeStyle=orthogonalEdgeStyle;" value="9: Gửi template OTP qua REST API EmailJS đến hòm thư sinh viên">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="826" y="572" />
+              <mxPoint x="826" y="596" />
+            </Array>
+            <mxPoint x="790" y="572" as="sourcePoint" />
+            <mxPoint x="790" y="596" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="18" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="10: Phản hồi kết quả gửi thư (success: true)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="790" y="638" as="sourcePoint" />
+            <mxPoint x="545" y="638" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="19" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="11: Trả về OtpSendResult(success, message)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="545" y="680" as="sourcePoint" />
+            <mxPoint x="305" y="680" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="20" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="12: Hiển thị SnackBar &#39;Mã OTP đã được gửi về email, vui lòng kiểm tra!&#39;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="305" y="722" as="sourcePoint" />
+            <mxPoint x="95" y="722" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="21" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="13: Nhập mã OTP từ email vào ô xác thực &amp; bấm &#39;Đăng ký&#39;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="95" y="764" as="sourcePoint" />
+            <mxPoint x="305" y="764" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="22" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="14: verifyOTPAndRegister(studentEmail, password, OTP, name, msv, university)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="305" y="806" as="sourcePoint" />
+            <mxPoint x="545" y="806" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="23" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="15: get() doc: otp_requests/{cleanEmail}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="545" y="848" as="sourcePoint" />
+            <mxPoint x="1030" y="848" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="24" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="16: Trả về dữ liệu OTP (validOtp, expiresAt)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1030" y="890" as="sourcePoint" />
+            <mxPoint x="545" y="890" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="25" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.4;fontSize=11;fontColor=#111827;edgeStyle=orthogonalEdgeStyle;" value="17: So khớp inputOTP == validOtp &amp; kiểm tra DateTime.now() &lt;= expiresAt">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="581" y="934" />
+              <mxPoint x="581" y="958" />
+            </Array>
+            <mxPoint x="545" y="934" as="sourcePoint" />
+            <mxPoint x="545" y="958" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="27" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="18a: createUserWithEmailAndPassword(email, password)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="545" y="1025" as="sourcePoint" />
+            <mxPoint x="1275" y="1025" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="28" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="19a: Trả về UserCredential (user.uid)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1275" y="1067" as="sourcePoint" />
+            <mxPoint x="545" y="1067" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="29" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="20a: user.updateDisplayName(name)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="545" y="1109" as="sourcePoint" />
+            <mxPoint x="1275" y="1109" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="30" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="21a: set() doc: users/{uid} (points: 0, inventory: [], equipped: {}, role: &#39;user&#39;)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="545" y="1151" as="sourcePoint" />
+            <mxPoint x="1030" y="1151" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="31" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.5;fontSize=11;fontColor=#111827;" value="22a: delete() doc: otp_requests/{cleanEmail} (dọn dẹp OTP)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="545" y="1193" as="sourcePoint" />
+            <mxPoint x="1030" y="1193" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="32" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="23a: Hoàn tất đăng ký, trả về UserCredential">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="545" y="1235" as="sourcePoint" />
+            <mxPoint x="305" y="1235" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="33" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;strokeColor=#1F2937;strokeWidth=1.4;fontSize=11;fontColor=#111827;edgeStyle=orthogonalEdgeStyle;" value="24a: Điều hướng người dùng sang DashboardView">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="341" y="1279" />
+              <mxPoint x="341" y="1303" />
+            </Array>
+            <mxPoint x="305" y="1279" as="sourcePoint" />
+            <mxPoint x="305" y="1303" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="34" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="25a: Chào mừng sinh viên gia nhập hệ thống">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="305" y="1345" as="sourcePoint" />
+            <mxPoint x="95" y="1345" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="35" parent="1" style="line;strokeWidth=1.2;dashed=1;labelPosition=center;verticalLabelPosition=top;align=left;verticalAlign=bottom;fontSize=11;fontStyle=2;strokeColor=#94A3B8;fontColor=#475569;" value="[Else: OTP sai hoặc hết hạn hoặc email đã tồn tại]" vertex="1">
+          <mxGeometry height="10" width="940" x="480" y="1370" as="geometry" />
+        </mxCell>
+        <mxCell id="36" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="18b: Ném Exception(&#39;Mã OTP không chính xác / đã hết hạn&#39;)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="545" y="1427" as="sourcePoint" />
+            <mxPoint x="305" y="1427" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="37" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;strokeColor=#4B5563;strokeWidth=1.3;fontSize=11;fontColor=#1F2937;" value="19b: Hiển thị SnackBar thông báo lỗi chi tiết cho sinh viên">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="305" y="1469" as="sourcePoint" />
+            <mxPoint x="95" y="1469" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

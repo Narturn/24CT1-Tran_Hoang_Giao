@@ -15,7 +15,7 @@ class EmailSendResult {
 
 class EmailService {
   // Cấu hình EmailJS từ người dùng
-  static const String _serviceId = 'service_ava742e';
+  static const String _serviceId = 'service_q3zazbn';
   static const String _templateId = 'template_oeykbq9';
   static const String _publicKey = 'oEjGs5K_T0q-LbY34';
 
